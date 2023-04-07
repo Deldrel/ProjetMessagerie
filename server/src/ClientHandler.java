@@ -1,3 +1,5 @@
+// https://www.geeksforgeeks.org/multithreaded-servers-in-java/
+
 import java.io.*;
 import java.net.*;
 
@@ -21,8 +23,10 @@ public class ClientHandler implements Runnable {
                 System.out.printf("Sent from the client: %s\n", line);
                 out.println(line);
             }
+
         } catch (IOException e) {
-            System.out.println("ClientHandler exception: " + e.getMessage());
+            e.printStackTrace();
+
         } finally {
             try {
                 if (out != null)
@@ -32,7 +36,7 @@ public class ClientHandler implements Runnable {
                     clientSocket.close();
                 }
             } catch (IOException e) {
-                System.out.println("ClientHandler exception: " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }

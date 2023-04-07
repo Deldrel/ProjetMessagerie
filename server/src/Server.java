@@ -1,3 +1,5 @@
+// https://www.geeksforgeeks.org/multithreaded-servers-in-java/
+
 import java.io.*;
 import java.net.*;
 
@@ -9,6 +11,15 @@ public class Server {
             server = new ServerSocket(1234);
             server.setReuseAddress(true);
 
+            Database.connect();
+            Database.recreateDatabase(); //DETRUIT ET RECREER LA DATABASE TOUTE MODIF MANUELLE ANNULEE
+            UserDAO userDAO = new UserDAO(Database.getConnection());
+
+            userDAO.add(new User(1, "John"));
+            userDAO.add(new User(2, "Jane"));
+            System.out.println(userDAO.get(1));
+            System.out.println(userDAO.get(2));
+
             while (true) {
                 Socket client = server.accept();
                 System.out.println("New client connected " + client.getInetAddress().getHostAddress());
@@ -17,15 +28,18 @@ public class Server {
             }
 
         } catch (IOException e) {
-            System.out.println("Server exception: " + e.getMessage());
+            e.printStackTrace();
+
         } finally {
             if (server != null) {
                 try {
                     server.close();
                 } catch (IOException e) {
-                    System.out.println("Server exception: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
+
+            Database.disconnect();
         }
     }
 }

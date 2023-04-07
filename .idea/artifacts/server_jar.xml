@@ -1,10 +1,11 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="server:jar">
+  <artifact name="server:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/server_jar</output-path>
-    <root id="archive" name="server.jar">
-      <element id="module-output" name="server" />
-      <element id="dir-copy" path="$PROJECT_DIR$/resources" />
-      <element id="dir-copy" path="$PROJECT_DIR$/modules" />
+    <root id="root">
+      <element id="archive" name="server.jar">
+        <element id="module-output" name="server" />
+      </element>
+      <element id="file-copy" path="$PROJECT_DIR$/modules/mysql-connector-java-5.1.49.jar" />
     </root>
   </artifact>
 </component>

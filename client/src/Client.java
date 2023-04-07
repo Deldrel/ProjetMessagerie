@@ -20,8 +20,9 @@ public class Client {
 
             socket.close();
             sc.close();
+
         } catch (IOException e) {
-            System.out.println("Client exception: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
