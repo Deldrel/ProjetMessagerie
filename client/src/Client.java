@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
+//debut interface graphique
 public class Client {
     public static void main(String[] args) {
         try (Socket socket = new Socket("localhost", 1234)) {
