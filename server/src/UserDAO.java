@@ -4,22 +4,22 @@ import java.sql.*;
 import java.time.Duration;
 
 public class UserDAO {
-    private Connection connection;
+    private static final Connection connection = Database.getConnection();
 
-    public UserDAO(Connection connection) {
-        this.connection = connection;
+    public static void add(User user) {
+        try {
+            int n = getNumberOfUsers();
+            if (n == -1)
+                return;
+
+            String request = "INSERT INTO user (id, username, first_name, last_name, email, password, permission, last_connection_time) VALUES ('" + n + "', '" + user.getUsername() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getEmail() + "', '" + sha1(user.getPassword()) + "', " + user.getPermission() + ", '" + user.getLastConnectionTime().toString() + "')";
+            Database.queryDDL(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void add(User user) {
-        int n = getNumberOfUsers();
-        if (n == -1)
-            return;
-
-        String request = "INSERT INTO user (id, username, first_name, last_name, email, password, permission, last_connection_time) VALUES ('" + n + "', '" + user.getUsername() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getEmail() + "', '" + user.getPassword() + "', " + user.getPermission() + ", '" + user.getLastConnectionTime().toString() + "')";
-        Database.queryDDL(request);
-    }
-
-    public <T> void modifyUserField(int id, String columnLabel, T value) {
+    public static <T> void modifyUserField(int id, String columnLabel, T value) {
         try {
             if (columnLabel.equals("id"))
                 throw new Exception("You can't modify the id of a user");
@@ -33,7 +33,7 @@ public class UserDAO {
         }
     }
 
-    public User get(int id) {
+    public static <T> User get(T value, String columnLabel) {
         if (connection == null) {
             System.out.println("\033[31mDatabase connection is not established\033[0m");
             return null;
@@ -43,7 +43,7 @@ public class UserDAO {
 
         try {
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM user WHERE id = " + id);
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM user WHERE " + columnLabel + " = '" + value + "'");
 
             if (resultSet.next()) {
                 int i = resultSet.getInt("id");
@@ -73,7 +73,7 @@ public class UserDAO {
         }
     }
 
-    public int getNumberOfUsers() {
+    public static int getNumberOfUsers() {
         if (connection == null) {
             System.out.println("\033[31mDatabase connection is not established\033[0m");
             return -1;

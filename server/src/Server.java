@@ -3,6 +3,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
+import java.sql.*;
 
 public class Server {
     private static ServerSocket server = null;
@@ -14,19 +15,6 @@ public class Server {
 
             Database.connect();
             Database.recreateDatabase(); //DETRUIT ET RECREER LA DATABASE, TOUTE MODIF MANUELLE ANNULEE
-
-            UserDAO userDAO = new UserDAO(Database.getConnection());
-            userDAO.add(new User());
-            userDAO.add(new User());
-
-            System.out.println(userDAO.get(0));
-            System.out.println(userDAO.get(1));
-
-            userDAO.modifyUserField(0, "username", "pedro");
-            userDAO.modifyUserField(0, "password", "1234");
-
-            System.out.println(userDAO.get(0));
-            System.out.println(userDAO.get(1));
 
             new Thread(() -> {
                 try {
@@ -61,7 +49,7 @@ public class Server {
     public static void newConnectionHandler() throws IOException {
         while (true) {
             Socket client = server.accept();
-            System.out.println("New client connected " + client.getInetAddress().getHostAddress());
+            LogDAO.add(new Log(0, 0, new Timestamp(System.currentTimeMillis()), "Connection: new connection"));
             ClientHandler clientSock = new ClientHandler(client);
             new Thread(clientSock).start();
         }
@@ -70,10 +58,11 @@ public class Server {
     public static int commandHandler(String command) {
         switch (command) {
             case "exit" -> {
+                LogDAO.add(new Log(0, 0, new Timestamp(System.currentTimeMillis()), "Server: shutdown"));
                 return 0;
             }
             case "help" -> {
-                System.out.println("help");
+                LogDAO.add(new Log(0, 0, new Timestamp(System.currentTimeMillis()), "Server: help"));
                 return 1;
             }
             default -> {
