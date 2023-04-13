@@ -97,6 +97,7 @@ public class Client {
                     System.out.println(newUser.toString());
                     dialog.dispose();
                 });
+
                 dialog.setSize(500, 500);
                 dialog.setLocationRelativeTo(null);
                 dialog.add(labelFirtnameNewAccount);
