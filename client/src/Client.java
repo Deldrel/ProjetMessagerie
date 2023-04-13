@@ -87,6 +87,16 @@ public class Client {
                 textFieldPasswordNewAccount.setBounds(210, 210, 200, 30);
                 JButton buttonCreateNewAccount = new JButton("Create");
                 buttonCreateNewAccount.setBounds(190, 300, 100, 30);
+                buttonCreateNewAccount.addActionListener(e1 -> {
+                    User newUser = new User();
+                    newUser.setFirstname(textFieldFirstnameNewAccount.getText());
+                    newUser.setLastname(textFieldLastnameNewAccount.getText());
+                    newUser.setEmail(textFieldEmailNewAccount.getText());
+                    newUser.setUsername(textFieldUsernameNewAccount.getText());
+                    newUser.setPassword(textFieldPasswordNewAccount.getText());
+                    System.out.println(newUser.toString());
+                    dialog.dispose();
+                });
                 dialog.setSize(500, 500);
                 dialog.setLocationRelativeTo(null);
                 dialog.add(labelFirtnameNewAccount);
@@ -102,10 +112,6 @@ public class Client {
                 dialog.add(buttonCreateNewAccount);
                 dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 dialog.setVisible(true);
-
-                User newUser = new User();
-                newUser.setUsername(textFieldUsernameNewAccount.getText());
-                newUser.setPassword(textFieldPasswordNewAccount.getText());
             });
 
             //--------------------------------panel Chat/button
