@@ -13,6 +13,8 @@ public class Client {
             Scanner sc = new Scanner(System.in);
             String line = null;
 
+            User user = new User();
+
 
             //initialisation of elements
             //--------------------------------frame
@@ -20,43 +22,117 @@ public class Client {
             frame.setSize(1200, 800);
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLayout(null);
             //--------------------------------panel
-            JPanel panel = new JPanel();
-            //--------------------------------layout
-            //creer un layout pour le panel grille de 3 lignes et 2 colonnes
-            GridLayout layout = new GridLayout(10, 2);
-            //espace de 5 pixel entre les composants
-            layout.setHgap(5);
-            layout.setVgap(10);
-            //appliquer le layout au panel
-            panel.setLayout(layout);
-            //--------------------------------panel/label
+            JPanel panelLogin = new JPanel();
+            panelLogin.setLayout(null);
+            JPanel panelChat = new JPanel();
+            panelChat.setLayout(null);
+            //--------------------------------TabbedPaned
+            JTabbedPane tabbedPane = new JTabbedPane();
+            tabbedPane.setSize(1200, 800);
+
+            //--------------------------------panel Login/label
             JLabel labelPseudo = new JLabel("Pseudo");
-            //position du label dans le layout : ligne 1 colonne 1
-            labelPseudo.setLocation(10, 10);
+            labelPseudo.setBounds(450, 10, 200, 30);
             JLabel labelPassword = new JLabel("Password");
-            labelPassword.setLocation(10, 50);
-            //--------------------------------panel/text field
-            JTextField textFieldPseudo = new JTextField(20);
-            //positionner text field pseudo sur la meme ligne que le label pseudo
-            textFieldPseudo.setLocation(50, 10);
+            labelPassword.setBounds(450, 60, 200, 30);
+            //--------------------------------panel Chat/label
+            JLabel labelFriends = new JLabel("Friends");
+            labelFriends.setBounds(5, 10, 200, 30);
+            JLabel labelChat = new JLabel("Chat");
+            labelChat.setBounds(250, 10, 200, 30);
 
-            JTextField textFieldPassword = new JTextField(20);
-            textFieldPassword.setLocation(50, 50);
-            //--------------------------------panel/button
+            //--------------------------------panel Login/text field
+            JTextField textFieldUsername = new JTextField(50);
+            textFieldUsername.setBounds(550, 10, 200, 30);
+            user.setUsername(textFieldUsername.getText());
+
+            JTextField textFieldPassword = new JTextField(50);
+            textFieldPassword.setBounds(550, 60, 200, 30);
+            user.setPassword(textFieldPassword.getText());
+            //--------------------------------panel Chat/text field
+            JTextField textFieldChat = new JTextField(50);
+            textFieldChat.setBounds(250, 700, 800, 30);
+
+            //--------------------------------panel Login/button
             JButton buttonLogin = new JButton("Login");
-            buttonLogin.setSize(20, 50);
-            buttonLogin.setLocation(50, 500);
+            buttonLogin.setBounds(500, 150, 200, 30);
+            //create new account and action listener
+            JButton buttonNewAccount = new JButton("New Account");
+            buttonNewAccount.setBounds(500, 200, 200, 30);
+            buttonNewAccount.addActionListener(e -> {
+                //create new account
+                JDialog dialog = new JDialog(frame, "New Account", true);
+                dialog.setLayout(null);
+                JLabel labelFirtnameNewAccount = new JLabel("Firstname");
+                labelFirtnameNewAccount.setBounds(100, 10, 100, 30);
+                JLabel labelLastnameNewAccount = new JLabel("Lastname");
+                labelLastnameNewAccount.setBounds(100, 60, 100, 30);
+                JLabel labelEmailNewAccount = new JLabel("Email");
+                labelEmailNewAccount.setBounds(100, 110, 100, 30);
+                JLabel labelUsernameNewAccount = new JLabel("Username");
+                labelUsernameNewAccount.setBounds(100, 160, 100, 30);
+                JLabel labelPasswordNewAccount = new JLabel("Password");
+                labelPasswordNewAccount.setBounds(100, 210, 100, 30);
+                JTextField textFieldFirstnameNewAccount = new JTextField(50);
+                textFieldFirstnameNewAccount.setBounds(210, 10, 200, 30);
+                JTextField textFieldLastnameNewAccount = new JTextField(50);
+                textFieldLastnameNewAccount.setBounds(210, 60, 200, 30);
+                JTextField textFieldEmailNewAccount = new JTextField(50);
+                textFieldEmailNewAccount.setBounds(210, 110, 200, 30);
+                JTextField textFieldUsernameNewAccount = new JTextField(50);
+                textFieldUsernameNewAccount.setBounds(210, 160, 200, 30);
+                JTextField textFieldPasswordNewAccount = new JTextField(50);
+                textFieldPasswordNewAccount.setBounds(210, 210, 200, 30);
+                JButton buttonCreateNewAccount = new JButton("Create");
+                buttonCreateNewAccount.setBounds(190, 300, 100, 30);
+                dialog.setSize(500, 500);
+                dialog.setLocationRelativeTo(null);
+                dialog.add(labelFirtnameNewAccount);
+                dialog.add(textFieldFirstnameNewAccount);
+                dialog.add(labelLastnameNewAccount);
+                dialog.add(textFieldLastnameNewAccount);
+                dialog.add(labelEmailNewAccount);
+                dialog.add(textFieldEmailNewAccount);
+                dialog.add(labelUsernameNewAccount);
+                dialog.add(textFieldUsernameNewAccount);
+                dialog.add(labelPasswordNewAccount);
+                dialog.add(textFieldPasswordNewAccount);
+                dialog.add(buttonCreateNewAccount);
+                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setVisible(true);
 
-            //add elements to panel
-            panel.add(labelPseudo);
-            panel.add(labelPassword);
-            panel.add(textFieldPseudo);
-            panel.add(textFieldPassword);
-            panel.add(buttonLogin);
+                User newUser = new User();
+                newUser.setUsername(textFieldUsernameNewAccount.getText());
+                newUser.setPassword(textFieldPasswordNewAccount.getText());
+            });
+
+            //--------------------------------panel Chat/button
+            JButton buttonSend = new JButton("Send");
+            buttonSend.setBounds(1060, 700, 100, 30);
+
+            //add elements to panel Login
+            panelLogin.add(labelPseudo);
+            panelLogin.add(labelPassword);
+            panelLogin.add(textFieldUsername);
+            panelLogin.add(textFieldPassword);
+            panelLogin.add(buttonLogin);
+            panelLogin.add(buttonNewAccount);
+            //add elements to panel Chat
+            panelChat.add(labelFriends);
+            panelChat.add(labelChat);
+            panelChat.add(textFieldChat);
+            panelChat.add(buttonSend);
+
+
+            //add elements to tabbed pane
+            tabbedPane.add("Login", panelLogin);
+            tabbedPane.add("Chat", panelChat);
+
 
             //show panel in the frame
-            frame.add(panel);
+            frame.add(tabbedPane);
 
 
             frame.setVisible(true);
