@@ -99,8 +99,8 @@ public class User {
         this.lastConnectionTime = lastConnectionTime;
     }
 
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password=" + password + ", permission=" + permission + ", lastConnectionTime=" + lastConnectionTime + "]";
+    public String newAccountToString(){
+        return "newaccount "+ this.getUsername() +" "+ this.getFirstname()+" "+ this.getLastname()+" "+this.getEmail()+" "+this.getPassword();
     }
+
 }

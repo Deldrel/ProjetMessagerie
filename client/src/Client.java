@@ -58,6 +58,15 @@ public class Client {
             //--------------------------------panel Login/button
             JButton buttonLogin = new JButton("Login");
             buttonLogin.setBounds(500, 150, 200, 30);
+            buttonLogin.addActionListener(e -> {
+                out.println("login "+textFieldUsername.getText()+" "+textFieldPassword.getText());
+                out.flush();
+                try {
+                    System.out.println("Server replied " + in.readLine());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
             //create new account and action listener
             JButton buttonNewAccount = new JButton("New Account");
             buttonNewAccount.setBounds(500, 200, 200, 30);
@@ -94,6 +103,10 @@ public class Client {
                     newUser.setEmail(textFieldEmailNewAccount.getText());
                     newUser.setUsername(textFieldUsernameNewAccount.getText());
                     newUser.setPassword(textFieldPasswordNewAccount.getText());
+                    VueUser vueUser = new VueUser();
+                    ControlUser controlUser = new ControlUser(newUser,vueUser);
+                    out.println(vueUser.newAccountToString(newUser));
+                    out.flush();
                     System.out.println(newUser.toString());
                     dialog.dispose();
                 });
