@@ -26,8 +26,11 @@ public class Client {
             //--------------------------------panel
             JPanel panelLogin = new JPanel();
             panelLogin.setLayout(null);
+
+
             JPanel panelChat = new JPanel();
             panelChat.setLayout(null);
+            panelChat.setBackground(Color.DARK_GRAY);
             //--------------------------------TabbedPaned
             JTabbedPane tabbedPane = new JTabbedPane();
             tabbedPane.setSize(1200, 800);
@@ -35,6 +38,8 @@ public class Client {
             //--------------------------------panel Login/label
             JLabel labelPseudo = new JLabel("Pseudo");
             labelPseudo.setBounds(450, 10, 200, 30);
+            labelPseudo.setFont(new Font("Serif", Font.BOLD, 30));
+            labelPseudo.setForeground(Color.WHITE);
             JLabel labelPassword = new JLabel("Password");
             labelPassword.setBounds(450, 60, 200, 30);
             //--------------------------------panel Chat/label
@@ -153,8 +158,6 @@ public class Client {
 
             //show panel in the frame
             frame.add(tabbedPane);
-
-
             frame.setVisible(true);
 
 
