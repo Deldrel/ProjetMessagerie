@@ -1,7 +1,8 @@
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+
+import static java.lang.System.out;
 
 public class Interface {
     User user = new User();
@@ -49,9 +50,41 @@ public class Interface {
         button.setBounds(x, y, width, height);
         return button;
     }
+    private void addActionButton(JButton button, ActionListener actionListener) {
+        button.addActionListener(actionListener);
+    }
 
-    // Fonction pour créer et configurer un JDialog
 
+    public void actionListenerCreateNewAccount(JButton buttonCreateNewAccount, JTextField textFieldFirstnameNewAccount, JTextField textFieldLastnameNewAccount, JTextField textFieldEmailNewAccount, JTextField textFieldUsernameNewAccount, JTextField textFieldPasswordNewAccount, JDialog dialog){
+        buttonCreateNewAccount.addActionListener(e1 -> {
+            User newUser = new User();
+            newUser.setFirstname(textFieldFirstnameNewAccount.getText());
+            newUser.setLastname(textFieldLastnameNewAccount.getText());
+            newUser.setEmail(textFieldEmailNewAccount.getText());
+            newUser.setUsername(textFieldUsernameNewAccount.getText());
+            newUser.setPassword(textFieldPasswordNewAccount.getText());
+            VueUser vueUser = new VueUser();
+            ControlUser controlUser = new ControlUser(newUser,vueUser);
+            out.println(vueUser.newAccountToString(newUser));
+            out.flush();
+            out.println(newUser.toString());
+            dialog.dispose();
+        });
+    }
+
+
+
+    public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JTextField textFieldPassword){
+        buttonLogin.addActionListener(e -> {
+            out.println("login"+textFieldUsername.getText()+" "+textFieldPassword.getText());
+            out.flush();
+            /*try {
+                out.println("Server replied" + in.readline());
+            }catch (IOException ex){
+                throw new RuntimeException(ex);
+            }*/
+        });
+    }
 
     public void createInterface() {
         // Frame
@@ -79,15 +112,8 @@ public class Interface {
 
         // panelLogin / bouton
         JButton buttonLogin = createJButton("Login", 500, 150, 200, 30);
-        buttonLogin.addActionListener(e -> {
-            /*out.println("login"+textFieldUsername.getText()+" "+textFieldPassword.getText());
-            out.flush;
-            try {
-                //System.out.println("Server replied" + in.readline());
-            }catch (IOException ex){
-                throw new RuntimeException(ex);
-            }  */
-        });
+        actionListenerLogin(buttonLogin, textFieldUsername, textFieldPassword);
+
 
         JButton buttonNewAccount = createJButton("New Account", 500, 200, 200, 30);
         buttonNewAccount.addActionListener(e -> {
@@ -116,20 +142,7 @@ public class Interface {
             textFieldPasswordNewAccount.setBounds(210, 210, 200, 30);
             JButton buttonCreateNewAccount = new JButton("Create");
             buttonCreateNewAccount.setBounds(190, 300, 100, 30);
-            buttonCreateNewAccount.addActionListener(e1 -> {
-                User newUser = new User();
-                newUser.setFirstname(textFieldFirstnameNewAccount.getText());
-                newUser.setLastname(textFieldLastnameNewAccount.getText());
-                newUser.setEmail(textFieldEmailNewAccount.getText());
-                newUser.setUsername(textFieldUsernameNewAccount.getText());
-                newUser.setPassword(textFieldPasswordNewAccount.getText());
-                /*VueUser vueUser = new VueUser();
-                ControlUser controlUser = new ControlUser(newUser,vueUser);
-                out.println(vueUser.newAccountToString(newUser));
-                out.flush();*/
-                System.out.println(newUser.toString());
-                dialog.dispose();
-            });
+            actionListenerCreateNewAccount(buttonCreateNewAccount, textFieldFirstnameNewAccount, textFieldLastnameNewAccount, textFieldEmailNewAccount, textFieldUsernameNewAccount, textFieldPasswordNewAccount, dialog);
 
             dialog.setSize(500, 500);
             dialog.setLocationRelativeTo(null);
@@ -181,4 +194,7 @@ public class Interface {
         frame.add(tabbedPane);
         frame.setVisible(true);
     }
+
+
+
 }
