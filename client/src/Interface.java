@@ -1,6 +1,10 @@
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 import static java.lang.System.out;
 
@@ -55,7 +59,7 @@ public class Interface {
     }
 
 
-    public void actionListenerCreateNewAccount(JButton buttonCreateNewAccount, JTextField textFieldFirstnameNewAccount, JTextField textFieldLastnameNewAccount, JTextField textFieldEmailNewAccount, JTextField textFieldUsernameNewAccount, JTextField textFieldPasswordNewAccount, JDialog dialog){
+    public void actionListenerCreateNewAccount(JButton buttonCreateNewAccount, JTextField textFieldFirstnameNewAccount, JTextField textFieldLastnameNewAccount, JTextField textFieldEmailNewAccount, JTextField textFieldUsernameNewAccount, JTextField textFieldPasswordNewAccount, JDialog dialog, PrintWriter out, BufferedReader in){
         buttonCreateNewAccount.addActionListener(e1 -> {
             User newUser = new User();
             newUser.setFirstname(textFieldFirstnameNewAccount.getText());
@@ -67,26 +71,30 @@ public class Interface {
             ControlUser controlUser = new ControlUser(newUser,vueUser);
             out.println(vueUser.newAccountToString(newUser));
             out.flush();
-            out.println(newUser.toString());
+            try {
+                System.out.println("Server replied" + in.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             dialog.dispose();
         });
     }
 
 
 
-    public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JTextField textFieldPassword){
+    public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JTextField textFieldPassword, PrintWriter out, BufferedReader in){
         buttonLogin.addActionListener(e -> {
-            out.println("login"+textFieldUsername.getText()+" "+textFieldPassword.getText());
+            out.println("login "+textFieldUsername.getText()+" "+textFieldPassword.getText());
             out.flush();
-            /*try {
-                out.println("Server replied" + in.readline());
+            try {
+                System.out.println("Server replied" + in.readLine());
             }catch (IOException ex){
                 throw new RuntimeException(ex);
-            }*/
+            }
         });
     }
 
-    public void createInterface() {
+    public void createInterface(PrintWriter out, BufferedReader in) {
         // Frame
         JFrame frame = createJFrame("Chat", 1200, 800);
 
@@ -112,7 +120,7 @@ public class Interface {
 
         // panelLogin / bouton
         JButton buttonLogin = createJButton("Login", 500, 150, 200, 30);
-        actionListenerLogin(buttonLogin, textFieldUsername, textFieldPassword);
+        actionListenerLogin(buttonLogin, textFieldUsername, textFieldPassword, out, in);
 
 
         JButton buttonNewAccount = createJButton("New Account", 500, 200, 200, 30);
@@ -142,7 +150,7 @@ public class Interface {
             textFieldPasswordNewAccount.setBounds(210, 210, 200, 30);
             JButton buttonCreateNewAccount = new JButton("Create");
             buttonCreateNewAccount.setBounds(190, 300, 100, 30);
-            actionListenerCreateNewAccount(buttonCreateNewAccount, textFieldFirstnameNewAccount, textFieldLastnameNewAccount, textFieldEmailNewAccount, textFieldUsernameNewAccount, textFieldPasswordNewAccount, dialog);
+            actionListenerCreateNewAccount(buttonCreateNewAccount, textFieldFirstnameNewAccount, textFieldLastnameNewAccount, textFieldEmailNewAccount, textFieldUsernameNewAccount, textFieldPasswordNewAccount, dialog, out, in);
 
             dialog.setSize(500, 500);
             dialog.setLocationRelativeTo(null);
