@@ -1,15 +1,28 @@
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseListener;
 import static java.lang.System.out;
+
+
 
 public class Interface {
     User user = new User();
+    private static final Color BACKGROUND_COLOR = Color.decode("#081132"   );
+    private static final Color BACKGROUND_BUTTON_COLOR = Color.decode("#522ED3");
+    private static final Color BACKGROUND_BUTTON_SURVOL_COLOR = Color.decode("#522ED3");
+    private static final Color BACKGROUND_BUTTON_SURVOL_CLICK = Color.decode("#78D1D8");
+
+    private static final Color BACKGROUND_BUTTON_BORDER_COLOR = Color.BLACK;
+
 
     private JFrame createJFrame(String title, int width, int height) {
         JFrame frame = new JFrame(title);
@@ -24,6 +37,7 @@ public class Interface {
     private JPanel createJPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(null);
+        panel.setBackground(BACKGROUND_COLOR);
         return panel;
     }
 
@@ -38,6 +52,7 @@ public class Interface {
     private JLabel createJLabel(String text, int x, int y, int width, int height) {
         JLabel label = new JLabel(text);
         label.setBounds(x, y, width, height);
+        label.setForeground(Color.WHITE);
         return label;
     }
 
@@ -45,6 +60,8 @@ public class Interface {
     private JTextField createJTextField(int x, int y, int width, int height) {
         JTextField textField = new JTextField(50);
         textField.setBounds(x, y, width, height);
+        textField.setBackground(Color.decode("#070D24"));
+        textField.setForeground(Color.WHITE);
         return textField;
     }
 
@@ -52,13 +69,28 @@ public class Interface {
     private JButton createJButton(String text, int x, int y, int width, int height) {
         JButton button = new JButton(text);
         button.setBounds(x, y, width, height);
+        button.setForeground(Color.WHITE);
+        button.setBackground(BACKGROUND_BUTTON_COLOR );
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(BACKGROUND_BUTTON_SURVOL_CLICK);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(BACKGROUND_BUTTON_SURVOL_COLOR );
+            }
+        });
         return button;
     }
     private void addActionButton(JButton button, ActionListener actionListener) {
         button.addActionListener(actionListener);
     }
 
-    public void actionListenerNewAccount(JButton buttonNewAccount, PrintWriter out, BufferedReader in, JFrame frame){
+    public void actionListenerNewAccount(JButton buttonNewAccount, PrintWriter out, BufferedReader in, JFrame frame) {
         buttonNewAccount.addActionListener(e -> {
             System.out.println("New Account");
             JDialog dialog = new JDialog(frame, "New Account", true);
@@ -105,7 +137,7 @@ public class Interface {
     }
 
 
-    public void actionListenerCreateNewAccount(JButton buttonCreateNewAccount, JTextField textFieldFirstnameNewAccount, JTextField textFieldLastnameNewAccount, JTextField textFieldEmailNewAccount, JTextField textFieldUsernameNewAccount, JPasswordField textFieldPasswordNewAccount, JDialog dialog, PrintWriter out, BufferedReader in){
+    public void actionListenerCreateNewAccount(JButton buttonCreateNewAccount, JTextField textFieldFirstnameNewAccount, JTextField textFieldLastnameNewAccount, JTextField textFieldEmailNewAccount, JTextField textFieldUsernameNewAccount, JPasswordField textFieldPasswordNewAccount, JDialog dialog, PrintWriter out, BufferedReader in) {
         buttonCreateNewAccount.addActionListener(e1 -> {
             User newUser = new User();
             newUser.setFirstname(textFieldFirstnameNewAccount.getText());
@@ -114,7 +146,7 @@ public class Interface {
             newUser.setUsername(textFieldUsernameNewAccount.getText());
             newUser.setPassword(textFieldPasswordNewAccount.getText());
             VueUser vueUser = new VueUser();
-            ControlUser controlUser = new ControlUser(newUser,vueUser);
+            ControlUser controlUser = new ControlUser(newUser, vueUser);
             out.println(vueUser.newAccountToString(newUser));
             out.flush();
             try {
@@ -126,28 +158,31 @@ public class Interface {
         });
     }
 
-    public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JPasswordField textFieldPassword, PrintWriter out, BufferedReader in){
+    public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JPasswordField textFieldPassword, PrintWriter out, BufferedReader in) {
         buttonLogin.addActionListener(e -> {
-            out.println("login "+textFieldUsername.getText()+" "+textFieldPassword.getPassword());
+            out.println("login " + textFieldUsername.getText() + " " + textFieldPassword.getPassword());
             out.flush();
             try {
                 System.out.println("Server replied" + in.readLine());
-            }catch (IOException ex){
+            } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
     }
+
+
 
     public void frameLogin(JFrame frameLogin, PrintWriter out, BufferedReader in){
         // Panels
         JPanel panelLogin = createJPanel();
 
         // Tabbed pane
-        JTabbedPane paneLogin = createJTabbedPane(800, 400);
+        JTabbedPane paneLogin = createJTabbedPane(800, 500);
 
         // panelLogin  / label
         JLabel labelPseudo = createJLabel("Username : ", 200, 30, 200, 30);
         JLabel labelPassword = createJLabel("Password : ", 200, 80, 200, 30);
+        labelPassword.setForeground(Color.WHITE);
 
         // panelLogin / textField
         JTextField textFieldUsername = createJTextField(300, 30, 200, 30);
@@ -156,6 +191,9 @@ public class Interface {
         JPasswordField textFieldPassword = new JPasswordField(50);
         textFieldPassword.setBounds(300, 80, 200, 30);
         user.setPassword(String.valueOf(textFieldPassword.getPassword()));
+        textFieldPassword.setBackground(Color.BLACK);
+        textFieldPassword.setForeground(Color.WHITE);
+
 
         // panelLogin / bouton
         //------------button login
