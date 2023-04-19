@@ -58,74 +58,9 @@ public class Interface {
         button.addActionListener(actionListener);
     }
 
-
-    public void actionListenerCreateNewAccount(JButton buttonCreateNewAccount, JTextField textFieldFirstnameNewAccount, JTextField textFieldLastnameNewAccount, JTextField textFieldEmailNewAccount, JTextField textFieldUsernameNewAccount, JTextField textFieldPasswordNewAccount, JDialog dialog, PrintWriter out, BufferedReader in){
-        buttonCreateNewAccount.addActionListener(e1 -> {
-            User newUser = new User();
-            newUser.setFirstname(textFieldFirstnameNewAccount.getText());
-            newUser.setLastname(textFieldLastnameNewAccount.getText());
-            newUser.setEmail(textFieldEmailNewAccount.getText());
-            newUser.setUsername(textFieldUsernameNewAccount.getText());
-            newUser.setPassword(textFieldPasswordNewAccount.getText());
-            VueUser vueUser = new VueUser();
-            ControlUser controlUser = new ControlUser(newUser,vueUser);
-            out.println(vueUser.newAccountToString(newUser));
-            out.flush();
-            try {
-                System.out.println("Server replied" + in.readLine());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            dialog.dispose();
-        });
-    }
-
-
-
-    public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JTextField textFieldPassword, PrintWriter out, BufferedReader in){
-        buttonLogin.addActionListener(e -> {
-            out.println("login "+textFieldUsername.getText()+" "+textFieldPassword.getText());
-            out.flush();
-            try {
-                System.out.println("Server replied" + in.readLine());
-            }catch (IOException ex){
-                throw new RuntimeException(ex);
-            }
-        });
-    }
-
-    public void createInterface(PrintWriter out, BufferedReader in) {
-        // Frame
-        JFrame frame = createJFrame("Chat", 1200, 800);
-
-
-        // Panels
-        JPanel panelLogin = createJPanel();
-        JPanel panelChat = createJPanel();
-
-        // Tabbed pane
-        JTabbedPane tabbedPane = createJTabbedPane(1200, 800);
-
-
-        // panelLogin  / label
-        JLabel labelPseudo = createJLabel("Pseudo", 450, 10, 200, 30);
-        JLabel labelPassword = createJLabel("Password", 450, 60, 200, 30);
-
-        // panelLogin / textField
-        JTextField textFieldUsername = createJTextField(550, 10, 200, 30);
-        user.setUsername(textFieldUsername.getText());
-
-        JTextField textFieldPassword = createJTextField(550, 60, 200, 30);
-        user.setPassword(textFieldPassword.getText());
-
-        // panelLogin / bouton
-        JButton buttonLogin = createJButton("Login", 500, 150, 200, 30);
-        actionListenerLogin(buttonLogin, textFieldUsername, textFieldPassword, out, in);
-
-
-        JButton buttonNewAccount = createJButton("New Account", 500, 200, 200, 30);
+    public void actionListenerNewAccount(JButton buttonNewAccount, PrintWriter out, BufferedReader in, JFrame frame){
         buttonNewAccount.addActionListener(e -> {
-            //create new account
+            System.out.println("New Account");
             JDialog dialog = new JDialog(frame, "New Account", true);
             dialog.setLayout(null);
             JLabel labelFirtnameNewAccount = new JLabel("Firstname");
@@ -146,12 +81,11 @@ public class Interface {
             textFieldEmailNewAccount.setBounds(210, 110, 200, 30);
             JTextField textFieldUsernameNewAccount = new JTextField(50);
             textFieldUsernameNewAccount.setBounds(210, 160, 200, 30);
-            JTextField textFieldPasswordNewAccount = new JTextField(50);
+            JPasswordField textFieldPasswordNewAccount = new JPasswordField(50);
             textFieldPasswordNewAccount.setBounds(210, 210, 200, 30);
             JButton buttonCreateNewAccount = new JButton("Create");
             buttonCreateNewAccount.setBounds(190, 300, 100, 30);
             actionListenerCreateNewAccount(buttonCreateNewAccount, textFieldFirstnameNewAccount, textFieldLastnameNewAccount, textFieldEmailNewAccount, textFieldUsernameNewAccount, textFieldPasswordNewAccount, dialog, out, in);
-
             dialog.setSize(500, 500);
             dialog.setLocationRelativeTo(null);
             dialog.add(labelFirtnameNewAccount);
@@ -168,6 +102,73 @@ public class Interface {
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         });
+    }
+
+
+    public void actionListenerCreateNewAccount(JButton buttonCreateNewAccount, JTextField textFieldFirstnameNewAccount, JTextField textFieldLastnameNewAccount, JTextField textFieldEmailNewAccount, JTextField textFieldUsernameNewAccount, JPasswordField textFieldPasswordNewAccount, JDialog dialog, PrintWriter out, BufferedReader in){
+        buttonCreateNewAccount.addActionListener(e1 -> {
+            User newUser = new User();
+            newUser.setFirstname(textFieldFirstnameNewAccount.getText());
+            newUser.setLastname(textFieldLastnameNewAccount.getText());
+            newUser.setEmail(textFieldEmailNewAccount.getText());
+            newUser.setUsername(textFieldUsernameNewAccount.getText());
+            newUser.setPassword(textFieldPasswordNewAccount.getText());
+            VueUser vueUser = new VueUser();
+            ControlUser controlUser = new ControlUser(newUser,vueUser);
+            out.println(vueUser.newAccountToString(newUser));
+            out.flush();
+            try {
+                System.out.println("Server replied" + in.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            dialog.dispose();
+        });
+    }
+
+    public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JPasswordField textFieldPassword, PrintWriter out, BufferedReader in){
+        buttonLogin.addActionListener(e -> {
+            out.println("login "+textFieldUsername.getText()+" "+textFieldPassword.getPassword());
+            out.flush();
+            try {
+                System.out.println("Server replied" + in.readLine());
+            }catch (IOException ex){
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+
+    public void createInterface(PrintWriter out, BufferedReader in) {
+        // Frame
+        JFrame frame = createJFrame("Chat", 1200, 800);
+
+        // Panels
+        JPanel panelLogin = createJPanel();
+        JPanel panelChat = createJPanel();
+
+        // Tabbed pane
+        JTabbedPane paneLogin = createJTabbedPane(1200, 800);
+        JTabbedPane paneChat = createJTabbedPane(1200, 800);
+
+        // panelLogin  / label
+        JLabel labelPseudo = createJLabel("Pseudo", 450, 10, 200, 30);
+        JLabel labelPassword = createJLabel("Password", 450, 60, 200, 30);
+
+        // panelLogin / textField
+        JTextField textFieldUsername = createJTextField(550, 10, 200, 30);
+        user.setUsername(textFieldUsername.getText());
+
+        JPasswordField textFieldPassword = new JPasswordField(50);
+        textFieldPassword.setBounds(550, 60, 200, 30);
+        user.setPassword(String.valueOf(textFieldPassword.getPassword()));
+
+        // panelLogin / bouton
+        JButton buttonLogin = createJButton("Login", 500, 150, 200, 30);
+        actionListenerLogin(buttonLogin, textFieldUsername, textFieldPassword, out, in);
+
+
+        JButton buttonNewAccount = createJButton("New Account", 500, 200, 200, 30);
+        actionListenerNewAccount(buttonNewAccount, out, in, frame);
 
         // panelLogin / add elements
         panelLogin.add(labelPseudo);
@@ -195,11 +196,12 @@ public class Interface {
 
 
         // add elements to tabbed Pane
-        tabbedPane.add("Login", panelLogin);
-        tabbedPane.add("Chat", panelChat);
+        paneLogin.add("Login", panelLogin);
+        paneChat.add("Chat", panelChat);
 
         //add elements in the frame
-        frame.add(tabbedPane);
+        frame.add(paneLogin);
+        frame.add(paneChat);
         frame.setVisible(true);
     }
 
