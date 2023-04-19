@@ -140,7 +140,10 @@ public class Interface {
 
     public void createInterface(PrintWriter out, BufferedReader in) {
         // Frame
-        JFrame frame = createJFrame("Chat", 1200, 800);
+        JFrame frameLogin = createJFrame("Login", 1200, 800);
+        JFrame frameChat = createJFrame("Chat", 1200, 800);
+
+
 
         // Panels
         JPanel panelLogin = createJPanel();
@@ -168,7 +171,7 @@ public class Interface {
 
 
         JButton buttonNewAccount = createJButton("New Account", 500, 200, 200, 30);
-        actionListenerNewAccount(buttonNewAccount, out, in, frame);
+        actionListenerNewAccount(buttonNewAccount, out, in, frameLogin);
 
         // panelLogin / add elements
         panelLogin.add(labelPseudo);
@@ -199,10 +202,11 @@ public class Interface {
         paneLogin.add("Login", panelLogin);
         paneChat.add("Chat", panelChat);
 
-        //add elements in the frame
-        frame.add(paneLogin);
-        frame.add(paneChat);
-        frame.setVisible(true);
+        //add elements in the frameLogin
+        frameLogin.add(paneLogin);
+        frameLogin.add(paneChat);
+        frameLogin.setVisible(true);
+        frameChat.setVisible(true);
     }
 
 
