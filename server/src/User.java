@@ -17,7 +17,7 @@ public class User {
         this.lastName = "";
         this.email = "";
         this.password = "";
-        this.permission = -1;
+        this.permission = -1; //0 = ban; 1 = user; 2 = moderateur; 3 = admin
         this.lastConnectionTime = Duration.ZERO;
     }
 

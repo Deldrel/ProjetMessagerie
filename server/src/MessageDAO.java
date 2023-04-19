@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class MessageDAO {
     private static final Connection connection = Database.getConnection();
@@ -41,6 +42,44 @@ public class MessageDAO {
             } else {
                 return null;
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static ArrayList<Message> getNLastMessages(int n) {
+        if (connection == null) {
+            System.out.println("\033[31mDatabase connection is not established\033[0m");
+            return null;
+        }
+
+        Statement statement = null;
+
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM message ORDER BY timestamp DESC LIMIT " + n);
+
+            ArrayList<Message> messages = new ArrayList<Message>();
+
+            while (resultSet.next()) {
+                int i = resultSet.getInt("id");
+                int user_id = resultSet.getInt("user_id");
+                Timestamp timestamp = resultSet.getTimestamp("timestamp");
+                String content = resultSet.getString("content");
+
+                messages.add(new Message(i, user_id, timestamp, content));
+            }
+
+            return messages;
 
         } catch (Exception e) {
             e.printStackTrace();

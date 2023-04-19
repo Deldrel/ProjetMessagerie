@@ -82,4 +82,41 @@ public class LogDAO {
             }
         }
     }
+
+    public static void printAllLogs() {
+        if (connection == null) {
+            System.out.println("\033[31mDatabase connection is not established\033[0m");
+            return;
+        }
+
+        Statement statement = null;
+
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM log");
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            int columnCount = resultSetMetaData.getColumnCount();
+
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.print(resultSetMetaData.getColumnName(i) + "\t");
+            }
+            System.out.println();
+
+            while (resultSet.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    System.out.print(resultSet.getString(i) + "\t");
+                }
+                System.out.println();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
