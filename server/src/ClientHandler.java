@@ -123,6 +123,15 @@ public class ClientHandler implements Runnable {
                         out.flush();
                     }
                 }
+                case "getCurrentUserInfo" -> {
+                    if (loggedin) {
+                        out.println(UserDAO.get(user_id, "id"));
+                        out.flush();
+                    } else {
+                        out.println("getCurrentUserInfo error");
+                        out.flush();
+                    }
+                }
                 case "ban" -> {
                     if (words.length != 2) {
                         out.println("argument error");
