@@ -1,6 +1,7 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +23,9 @@ public class Interface {
     private static final Color BACKGROUND_BUTTON_SURVOL_CLICK = Color.decode("#78D1D8");
 
     private static final Color BACKGROUND_BUTTON_BORDER_COLOR = Color.BLACK;
+
+    public JFrame frameLogin = createJFrame("Login", 800, 400);
+    public JFrame frameChat = createJFrame("Chat", 1200, 800);
 
 
     private JFrame createJFrame(String title, int width, int height) {
@@ -69,7 +73,7 @@ public class Interface {
     private JButton createJButton(String text, int x, int y, int width, int height) {
         JButton button = new JButton(text);
         button.setBounds(x, y, width, height);
-        button.setForeground(Color.WHITE);
+        button.setForeground(Color.RED);
         button.setBackground(BACKGROUND_BUTTON_COLOR );
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         button.setFont(new Font("Arial", Font.BOLD, 14));
@@ -160,6 +164,8 @@ public class Interface {
 
     public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JPasswordField textFieldPassword, PrintWriter out, BufferedReader in) {
         buttonLogin.addActionListener(e -> {
+            frameLogin.dispose();
+            frameChat.setVisible(true);
             out.println("login " + textFieldUsername.getText() + " " + textFieldPassword.getPassword());
             out.flush();
             try {
@@ -167,10 +173,17 @@ public class Interface {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+
+
         });
     }
 
-
+    public void actionListenerDeco(JButton buttonDeco) {
+        buttonDeco.addActionListener(e -> {
+            frameChat.dispose();
+            frameLogin.setVisible(true);
+        });
+    }
 
     public void frameLogin(JFrame frameLogin, PrintWriter out, BufferedReader in){
         // Panels
@@ -178,6 +191,7 @@ public class Interface {
 
         // Tabbed pane
         JTabbedPane paneLogin = createJTabbedPane(800, 500);
+
 
         // panelLogin  / label
         JLabel labelPseudo = createJLabel("Username : ", 200, 30, 200, 30);
@@ -234,28 +248,30 @@ public class Interface {
         // panelChat / bouton
         //------------button send
         JButton buttonSend = createJButton("Send", 1060, 690, 100, 30);
+        JButton buttonDeco = createJButton("",1100,30,40,40);
+
+        buttonDeco.setIcon(new ImageIcon("Images/se-deconnecter.png"));
+        buttonDeco.setContentAreaFilled(false);
+        buttonDeco.setBorderPainted(false);
+        buttonDeco.setFocusPainted(false);
+        actionListenerDeco(buttonDeco);
 
         // panelChat / add elements
         panelChat.add(textFieldChat);
         panelChat.add(buttonSend);
+        panelChat.add(buttonDeco);
 
         // add elements to tabbed Pane
         paneChat.add("Chat", panelChat);
 
         //add elements in the frameChat
         frameChat.add(paneChat);
-        frameChat.setVisible(true);
+        //frameChat.setVisible(true);
     }
-
-
-
 
     public void createInterface(PrintWriter out, BufferedReader in) {
         // Frame
-        JFrame frameLogin = createJFrame("Login", 800, 400);
         frameLogin(frameLogin, out, in);
-
-        JFrame frameChat = createJFrame("Chat", 1200, 800);
         frameChat(frameChat, out, in);
     }
 
