@@ -138,39 +138,32 @@ public class Interface {
         });
     }
 
-    public void createInterface(PrintWriter out, BufferedReader in) {
-        // Frame
-        JFrame frameLogin = createJFrame("Login", 1200, 800);
-        JFrame frameChat = createJFrame("Chat", 1200, 800);
-
-
-
+    public void frameLogin(JFrame frameLogin, PrintWriter out, BufferedReader in){
         // Panels
         JPanel panelLogin = createJPanel();
-        JPanel panelChat = createJPanel();
 
         // Tabbed pane
-        JTabbedPane paneLogin = createJTabbedPane(1200, 800);
-        JTabbedPane paneChat = createJTabbedPane(1200, 800);
+        JTabbedPane paneLogin = createJTabbedPane(800, 400);
 
         // panelLogin  / label
-        JLabel labelPseudo = createJLabel("Pseudo", 450, 10, 200, 30);
-        JLabel labelPassword = createJLabel("Password", 450, 60, 200, 30);
+        JLabel labelPseudo = createJLabel("Username : ", 200, 30, 200, 30);
+        JLabel labelPassword = createJLabel("Password : ", 200, 80, 200, 30);
 
         // panelLogin / textField
-        JTextField textFieldUsername = createJTextField(550, 10, 200, 30);
+        JTextField textFieldUsername = createJTextField(300, 30, 200, 30);
         user.setUsername(textFieldUsername.getText());
 
         JPasswordField textFieldPassword = new JPasswordField(50);
-        textFieldPassword.setBounds(550, 60, 200, 30);
+        textFieldPassword.setBounds(300, 80, 200, 30);
         user.setPassword(String.valueOf(textFieldPassword.getPassword()));
 
         // panelLogin / bouton
-        JButton buttonLogin = createJButton("Login", 500, 150, 200, 30);
+        //------------button login
+        JButton buttonLogin = createJButton("Login", 300, 150, 200, 30);
         actionListenerLogin(buttonLogin, textFieldUsername, textFieldPassword, out, in);
 
-
-        JButton buttonNewAccount = createJButton("New Account", 500, 200, 200, 30);
+        //------------button new account
+        JButton buttonNewAccount = createJButton("New Account", 300, 200, 200, 30);
         actionListenerNewAccount(buttonNewAccount, out, in, frameLogin);
 
         // panelLogin / add elements
@@ -181,32 +174,51 @@ public class Interface {
         panelLogin.add(buttonLogin);
         panelLogin.add(buttonNewAccount);
 
-        // PanelChat / label
-        JLabel labelFriends = createJLabel("Friends", 5, 10, 200, 30);
-        JLabel labelChat = createJLabel("Chat", 250, 10, 200, 30);
-
-        //panelChat /textField
-        JTextField textFieldChat = createJTextField(250, 700, 800, 30);
-
-        //panelChat / button
-        JButton buttonSend = createJButton("Send", 1060,700,100,30);
-
-        // panelChat / add elements
-        panelChat.add(labelFriends);
-        panelChat.add(labelChat);
-        panelChat.add(textFieldChat);
-        panelChat.add(buttonSend);
-
-
         // add elements to tabbed Pane
         paneLogin.add("Login", panelLogin);
-        paneChat.add("Chat", panelChat);
 
         //add elements in the frameLogin
         frameLogin.add(paneLogin);
-        frameLogin.add(paneChat);
         frameLogin.setVisible(true);
+    }
+    public void frameChat(JFrame frameChat, PrintWriter out, BufferedReader in){
+        // Panels
+        JPanel panelChat = createJPanel();
+
+        // Tabbed pane
+        JTabbedPane paneChat = createJTabbedPane(1200, 800);
+
+        // panelChat / label
+
+        // panelChat / textField
+        JTextField textFieldChat = createJTextField(250, 680, 790, 50);
+
+        // panelChat / bouton
+        //------------button send
+        JButton buttonSend = createJButton("Send", 1060, 690, 100, 30);
+
+        // panelChat / add elements
+        panelChat.add(textFieldChat);
+        panelChat.add(buttonSend);
+
+        // add elements to tabbed Pane
+        paneChat.add("Chat", panelChat);
+
+        //add elements in the frameChat
+        frameChat.add(paneChat);
         frameChat.setVisible(true);
+    }
+
+
+
+
+    public void createInterface(PrintWriter out, BufferedReader in) {
+        // Frame
+        JFrame frameLogin = createJFrame("Login", 800, 400);
+        frameLogin(frameLogin, out, in);
+
+        JFrame frameChat = createJFrame("Chat", 1200, 800);
+        frameChat(frameChat, out, in);
     }
 
 
