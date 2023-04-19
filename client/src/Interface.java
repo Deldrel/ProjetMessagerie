@@ -71,7 +71,11 @@ public class Interface {
             ControlUser controlUser = new ControlUser(newUser,vueUser);
             out.println(vueUser.newAccountToString(newUser));
             out.flush();
-            out.println(newUser.toString());
+            try {
+                System.out.println("Server replied" + in.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             dialog.dispose();
         });
     }
@@ -80,10 +84,10 @@ public class Interface {
 
     public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JTextField textFieldPassword, PrintWriter out, BufferedReader in){
         buttonLogin.addActionListener(e -> {
-            out.println("login"+textFieldUsername.getText()+" "+textFieldPassword.getText());
+            out.println("login "+textFieldUsername.getText()+" "+textFieldPassword.getText());
             out.flush();
             try {
-                out.println("Server replied" + in.readLine());
+                System.out.println("Server replied" + in.readLine());
             }catch (IOException ex){
                 throw new RuntimeException(ex);
             }
