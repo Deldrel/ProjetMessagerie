@@ -32,6 +32,7 @@ public class Interface {
     public JPanel panelLogin = createJPanel();
 
     int id = 0;
+    ArrayList<JLabel> TabMessage = new ArrayList<>();
 
 
     private JFrame createJFrame(String title, int width, int height) {
@@ -214,29 +215,28 @@ public class Interface {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-/*
+
         out.println("getmessages 5");
         out.flush();
-        ArrayList<JLabel> TabMessage = new ArrayList<>();
 
         try {
             // id time(date heure) content
             line = in.readLine();
             String[] words = line.split(" ");
             for (int i = 0; i < 5; i++) {
-                if (id == Integer.parseInt(words[0])){
+                /*if (id == Integer.parseInt(words[0])){
                     JLabel newJlabel = createJLabel(words[3], 800, 500 - (i * 50), 200, 30);
                     TabMessage.add(newJlabel);
                     frameChat.add(TabMessage.get(i));
-                }
+                }*/
                 JLabel newJlabel = createJLabel(words[3], 400, 500 - (i * 50), 200, 30);
                 TabMessage.add(newJlabel);
-                frameChat.add(TabMessage.get(i));
+                panelChat.add(TabMessage.get(i));
             }
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-*/
+
 
         //add elements in the frameChat
         panelChat.add(labelPseudo);
