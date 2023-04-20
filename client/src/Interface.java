@@ -223,7 +223,15 @@ public class Interface {
             // id time(date heure) content
             line = in.readLine();
             String[] words = line.split(" ");
+
+
             for (int i = 0; i < 5; i++) {
+                if (words.length < 3) {
+                    out.println("argument error");
+                    out.flush();
+                    break;
+                }
+
                 /*if (id == Integer.parseInt(words[0])){
                     JLabel newJlabel = createJLabel(words[3], 800, 500 - (i * 50), 200, 30);
                     TabMessage.add(newJlabel);
