@@ -233,8 +233,8 @@ public class Interface {
                 TabMessage.add(newJlabel);
                 panelChat.add(TabMessage.get(i));
             }
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
 
