@@ -9,15 +9,16 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseListener;
 import static java.lang.System.out;
 
 
-
 public class Interface {
     User user = new User();
-    private static final Color BACKGROUND_COLOR = Color.decode("#081132"   );
+    private static final Color BACKGROUND_COLOR = Color.decode("#081132");
     private static final Color BACKGROUND_BUTTON_COLOR = Color.decode("#522ED3");
     private static final Color BACKGROUND_BUTTON_SURVOL_COLOR = Color.decode("#522ED3");
     private static final Color BACKGROUND_BUTTON_SURVOL_CLICK = Color.decode("#78D1D8");
@@ -26,6 +27,11 @@ public class Interface {
 
     public JFrame frameLogin = createJFrame("Login", 800, 400);
     public JFrame frameChat = createJFrame("Chat", 1200, 800);
+
+    public JPanel panelChat = createJPanel();
+    public JPanel panelLogin = createJPanel();
+
+    int id = 0;
 
 
     private JFrame createJFrame(String title, int width, int height) {
@@ -74,7 +80,7 @@ public class Interface {
         JButton button = new JButton(text);
         button.setBounds(x, y, width, height);
         button.setForeground(Color.RED);
-        button.setBackground(BACKGROUND_BUTTON_COLOR );
+        button.setBackground(BACKGROUND_BUTTON_COLOR);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         button.setFont(new Font("Arial", Font.BOLD, 14));
         button.addMouseListener(new MouseAdapter() {
@@ -85,11 +91,12 @@ public class Interface {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                button.setBackground(BACKGROUND_BUTTON_SURVOL_COLOR );
+                button.setBackground(BACKGROUND_BUTTON_SURVOL_COLOR);
             }
         });
         return button;
     }
+
     private void addActionButton(JButton button, ActionListener actionListener) {
         button.addActionListener(actionListener);
     }
@@ -164,12 +171,19 @@ public class Interface {
 
     public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JPasswordField textFieldPassword, PrintWriter out, BufferedReader in) {
         buttonLogin.addActionListener(e -> {
-            frameLogin.dispose();
-            frameChat.setVisible(true);
-            out.println("login " + textFieldUsername.getText() + " " + textFieldPassword.getPassword());
+            out.println("login " + textFieldUsername.getText() + " " + textFieldPassword.getText());
             out.flush();
             try {
-                System.out.println("Server replied" + in.readLine());
+                String line = in.readLine();
+                if (line != null) {
+                    System.out.println("Server replied " + line);
+                    String[] words = line.split(" ");
+                    if (Objects.equals(words[1], "success")) {
+                        InitialisationFramChat(frameChat,panelChat, out, in);
+                        frameLogin.dispose();
+                        frameChat.setVisible(true);
+                    }
+                }
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -185,9 +199,52 @@ public class Interface {
         });
     }
 
-    public void frameLogin(JFrame frameLogin, PrintWriter out, BufferedReader in){
+    public void InitialisationFramChat(JFrame frameChat,JPanel panelChat, PrintWriter out, BufferedReader in) {
+        String line;
+        JLabel labelPseudo = createJLabel("Username : ", 30, 30, 200, 30);
+        out.println("getCurrentUserInfo");
+        out.flush();
+        try {
+            line = in.readLine();
+            String[] words = line.split(" ");
+            labelPseudo.setText(words[0]);
+            id = Integer.parseInt(words[1]);
+            System.out.println(id);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+/*
+        out.println("getmessages 5");
+        out.flush();
+        ArrayList<JLabel> TabMessage = new ArrayList<>();
+
+        try {
+            // id time(date heure) content
+            line = in.readLine();
+            String[] words = line.split(" ");
+            for (int i = 0; i < 5; i++) {
+                if (id == Integer.parseInt(words[0])){
+                    JLabel newJlabel = createJLabel(words[3], 800, 500 - (i * 50), 200, 30);
+                    TabMessage.add(newJlabel);
+                    frameChat.add(TabMessage.get(i));
+                }
+                JLabel newJlabel = createJLabel(words[3], 400, 500 - (i * 50), 200, 30);
+                TabMessage.add(newJlabel);
+                frameChat.add(TabMessage.get(i));
+            }
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+*/
+
+        //add elements in the frameChat
+        panelChat.add(labelPseudo);
+    }
+
+    public void frameLogin(JFrame frameLogin, PrintWriter out, BufferedReader in) {
         // Panels
-        JPanel panelLogin = createJPanel();
+        //JPanel panelLogin = createJPanel();
 
         // Tabbed pane
         JTabbedPane paneLogin = createJTabbedPane(800, 500);
@@ -233,9 +290,10 @@ public class Interface {
         frameLogin.add(paneLogin);
         frameLogin.setVisible(true);
     }
-    public void frameChat(JFrame frameChat, PrintWriter out, BufferedReader in){
+
+    public void frameChat(JFrame frameChat, PrintWriter out, BufferedReader in) {
         // Panels
-        JPanel panelChat = createJPanel();
+        //JPanel panelChat = createJPanel();
 
         // Tabbed pane
         JTabbedPane paneChat = createJTabbedPane(1200, 800);
@@ -248,7 +306,7 @@ public class Interface {
         // panelChat / bouton
         //------------button send
         JButton buttonSend = createJButton("Send", 1060, 690, 100, 30);
-        JButton buttonDeco = createJButton("",1100,30,40,40);
+        JButton buttonDeco = createJButton("", 1100, 30, 40, 40);
 
         buttonDeco.setIcon(new ImageIcon("Images/se-deconnecter.png"));
         buttonDeco.setContentAreaFilled(false);
@@ -257,9 +315,12 @@ public class Interface {
         actionListenerDeco(buttonDeco);
 
         // panelChat / add elements
+
         panelChat.add(textFieldChat);
         panelChat.add(buttonSend);
         panelChat.add(buttonDeco);
+
+
 
         // add elements to tabbed Pane
         paneChat.add("Chat", panelChat);
@@ -274,7 +335,6 @@ public class Interface {
         frameLogin(frameLogin, out, in);
         frameChat(frameChat, out, in);
     }
-
 
 
 }
