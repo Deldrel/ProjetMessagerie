@@ -17,6 +17,10 @@ import static java.lang.System.out;
 
 
 public class Interface {
+    PrintWriter out ;
+    BufferedReader in ;
+
+
     User user = new User();
     private static final Color BACKGROUND_COLOR = Color.decode("#081132");
     private static final Color BACKGROUND_BUTTON_COLOR = Color.decode("#522ED3");
@@ -32,6 +36,8 @@ public class Interface {
     public JPanel panelLogin = createJPanel();
 
     int id = 0;
+
+    String line;
     ArrayList<JLabel> TabMessage = new ArrayList<>();
 
 
@@ -102,7 +108,7 @@ public class Interface {
         button.addActionListener(actionListener);
     }
 
-    public void actionListenerNewAccount(JButton buttonNewAccount, PrintWriter out, BufferedReader in, JFrame frame) {
+    public void actionListenerNewAccount(JButton buttonNewAccount, JFrame frame) {
         buttonNewAccount.addActionListener(e -> {
             System.out.println("New Account");
             JDialog dialog = new JDialog(frame, "New Account", true);
@@ -129,7 +135,7 @@ public class Interface {
             textFieldPasswordNewAccount.setBounds(210, 210, 200, 30);
             JButton buttonCreateNewAccount = new JButton("Create");
             buttonCreateNewAccount.setBounds(190, 300, 100, 30);
-            actionListenerCreateNewAccount(buttonCreateNewAccount, textFieldFirstnameNewAccount, textFieldLastnameNewAccount, textFieldEmailNewAccount, textFieldUsernameNewAccount, textFieldPasswordNewAccount, dialog, out, in);
+            actionListenerCreateNewAccount(buttonCreateNewAccount, textFieldFirstnameNewAccount, textFieldLastnameNewAccount, textFieldEmailNewAccount, textFieldUsernameNewAccount, textFieldPasswordNewAccount, dialog);
             dialog.setSize(500, 500);
             dialog.setLocationRelativeTo(null);
             dialog.add(labelFirtnameNewAccount);
@@ -149,7 +155,7 @@ public class Interface {
     }
 
 
-    public void actionListenerCreateNewAccount(JButton buttonCreateNewAccount, JTextField textFieldFirstnameNewAccount, JTextField textFieldLastnameNewAccount, JTextField textFieldEmailNewAccount, JTextField textFieldUsernameNewAccount, JPasswordField textFieldPasswordNewAccount, JDialog dialog, PrintWriter out, BufferedReader in) {
+    public void actionListenerCreateNewAccount(JButton buttonCreateNewAccount, JTextField textFieldFirstnameNewAccount, JTextField textFieldLastnameNewAccount, JTextField textFieldEmailNewAccount, JTextField textFieldUsernameNewAccount, JPasswordField textFieldPasswordNewAccount, JDialog dialog) {
         buttonCreateNewAccount.addActionListener(e1 -> {
             User newUser = new User();
             newUser.setFirstname(textFieldFirstnameNewAccount.getText());
@@ -170,17 +176,17 @@ public class Interface {
         });
     }
 
-    public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JPasswordField textFieldPassword, PrintWriter out, BufferedReader in) {
+    public void actionListenerLogin(JButton buttonLogin, JTextField textFieldUsername, JPasswordField textFieldPassword) {
         buttonLogin.addActionListener(e -> {
             out.println("login " + textFieldUsername.getText() + " " + textFieldPassword.getText());
             out.flush();
             try {
-                String line = in.readLine();
+                line = in.readLine();
                 if (line != null) {
                     System.out.println("Server replied " + line);
                     String[] words = line.split(" ");
                     if (Objects.equals(words[1], "success")) {
-                        InitialisationFramChat(frameChat,panelChat, out, in);
+                        InitialisationFramChat(frameChat,panelChat);
                         frameLogin.dispose();
                         frameChat.setVisible(true);
                     }
@@ -193,15 +199,27 @@ public class Interface {
         });
     }
 
+    public Interface(PrintWriter out, BufferedReader in) {
+        this.out = out;
+        this.in = in;
+    }
+
     public void actionListenerDeco(JButton buttonDeco) {
         buttonDeco.addActionListener(e -> {
+            out.println("logout");
+            out.flush();
+            try {
+                line = in.readLine();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            System.out.println("Server replied " + line);
             frameChat.dispose();
             frameLogin.setVisible(true);
         });
     }
 
-    public void InitialisationFramChat(JFrame frameChat,JPanel panelChat, PrintWriter out, BufferedReader in) {
-        String line;
+    public void InitialisationFramChat(JFrame frameChat,JPanel panelChat) {
         JLabel labelPseudo = createJLabel("Username : ", 30, 30, 200, 30);
         out.println("getCurrentUserInfo");
         out.flush();
@@ -227,7 +245,7 @@ public class Interface {
 
             for (int i = 0; i < 5; i++) {
                 if (words.length < 3) {
-                    out.println("argument error");
+                    out.println("pas de message");
                     out.flush();
                     break;
                 }
@@ -250,7 +268,7 @@ public class Interface {
         panelChat.add(labelPseudo);
     }
 
-    public void frameLogin(JFrame frameLogin, PrintWriter out, BufferedReader in) {
+    public void frameLogin(JFrame frameLogin) {
         // Panels
         //JPanel panelLogin = createJPanel();
 
@@ -277,11 +295,11 @@ public class Interface {
         // panelLogin / bouton
         //------------button login
         JButton buttonLogin = createJButton("Login", 300, 150, 200, 30);
-        actionListenerLogin(buttonLogin, textFieldUsername, textFieldPassword, out, in);
+        actionListenerLogin(buttonLogin, textFieldUsername, textFieldPassword);
 
         //------------button new account
         JButton buttonNewAccount = createJButton("New Account", 300, 200, 200, 30);
-        actionListenerNewAccount(buttonNewAccount, out, in, frameLogin);
+        actionListenerNewAccount(buttonNewAccount, frameLogin);
 
         // panelLogin / add elements
         panelLogin.add(labelPseudo);
@@ -299,7 +317,7 @@ public class Interface {
         frameLogin.setVisible(true);
     }
 
-    public void frameChat(JFrame frameChat, PrintWriter out, BufferedReader in) {
+    public void frameChat(JFrame frameChat) {
         // Panels
         //JPanel panelChat = createJPanel();
 
@@ -338,10 +356,10 @@ public class Interface {
         //frameChat.setVisible(true);
     }
 
-    public void createInterface(PrintWriter out, BufferedReader in) {
+    public void createInterface() {
         // Frame
-        frameLogin(frameLogin, out, in);
-        frameChat(frameChat, out, in);
+        frameLogin(frameLogin);
+        frameChat(frameChat);
     }
 
 

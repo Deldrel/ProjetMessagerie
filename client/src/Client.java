@@ -15,8 +15,8 @@ public class Client {
 
 
 
-             Interface ui = new Interface();
-             ui.createInterface(out,in);
+             Interface ui = new Interface(out,in);
+             ui.createInterface();
 
 
 
