@@ -16,12 +16,14 @@ public class Server {
 
             Database.connect();
             Database.recreateDatabase(); //DETRUIT ET RECREER LA DATABASE, TOUTE MODIF MANUELLE ANNULEE
-            //differents users de la base de données
+
             UserDAO.add(new User(-1, "Deldrel", "Pedro", "LAPOLLA", "pedro.lap@edu.ece.fr", "aaaa", 1, Duration.ZERO));
             UserDAO.add(new User(-1, "Rouxie", "PE", "DAUGUETTE", "pe.daug@edu.ece.fr", "bbbb", 1, Duration.ZERO));
             UserDAO.add(new User(-1, "RiderSurfer", "Oscar", "CHAUVEREN", "oscar.chauve@edu.ece.fr", "cccc", 1, Duration.ZERO));
             UserDAO.add(new User(-1, "Aurel3412", "Aurelie", "SENOYER", "aurelie.senoye@edu.ece.fr", "dddd", 1, Duration.ZERO));
             UserDAO.add(new User(-1, "Lucidre", "Lucie", "KASPER", "lucidre.kasper@edu.ece.fr", "eeee", 1, Duration.ZERO));
+            MessageDAO.add(new Message(0, 1, new Timestamp(System.currentTimeMillis()), "Hello World!"));
+            MessageDAO.add(new Message(0, 2, new Timestamp(System.currentTimeMillis()), "World Hello!"));
 
             new Thread(() -> {
                 try {

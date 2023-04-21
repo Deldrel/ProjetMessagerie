@@ -42,26 +42,28 @@ public class ClientHandler implements Runnable {
     public void commandHandler() throws Exception {
         String line;
         while ((line = in.readLine()) != null) {
+            line = line.replaceAll("'", " ").replaceAll("\"", " ");
             String[] words = line.split(" ");
-            StringBuilder message = new StringBuilder();
-            for (int i = 1; i < words.length; i++) {
-                message.append(words[i]).append(" ");
-            }
 
-            LogDAO.add(new Log(0, 0, new Timestamp(System.currentTimeMillis()), "Client: " + line));
+            LogDAO.add(new Log(0, user_id, new Timestamp(System.currentTimeMillis()), "Client: " + line));
 
             switch (words[0]) {
-                case "message" -> {
+                case "sendMessage" -> {
                     if (loggedin) {
+                        StringBuilder message = new StringBuilder();
+                        for (int i = 1; i < words.length; i++) {
+                            message.append(words[i]).append(" ");
+                        }
+
                         MessageDAO.add(new Message(0, user_id, new Timestamp(System.currentTimeMillis()), message.toString()));
-                        out.println("message sent");
+                        out.println("sendMessage sent");
                         out.flush();
                     } else {
-                        out.println("message error");
+                        out.println("sendMessage error");
                         out.flush();
                     }
                 }
-                case "getmessages" -> {
+                case "getMessages" -> {
                     if (words.length != 2) {
                         out.println("argument error");
                         out.flush();
@@ -69,10 +71,10 @@ public class ClientHandler implements Runnable {
                     }
 
                     if (loggedin) {
-                        out.println(MessageDAO.getNLastMessages(10));
+                        out.println(MessageDAO.getNLastMessages(Integer.parseInt(words[1])));
                         out.flush();
                     } else {
-                        out.println("getmessages error");
+                        out.println("getMessages error");
                         out.flush();
                     }
                 }
@@ -97,7 +99,7 @@ public class ClientHandler implements Runnable {
                         out.flush();
                     }
                 }
-                case "newaccount" -> {
+                case "newAccount" -> {
                     if (words.length != 6) {
                         out.println("argument error");
                         out.flush();
@@ -105,7 +107,7 @@ public class ClientHandler implements Runnable {
                     }
 
                     UserDAO.add(new User(0, words[1], words[2], words[3], words[4], words[5], -1, Duration.ZERO));
-                    out.println("newaccount success");
+                    out.println("newAccount success");
                     out.flush();
                 }
                 case "getUserInfo" -> {
@@ -155,8 +157,8 @@ public class ClientHandler implements Runnable {
                     }
                 }
                 default -> {
-                    //do nothing
-                }
+                    out.println("command error");
+                    out.flush();}
             }
         }
     }

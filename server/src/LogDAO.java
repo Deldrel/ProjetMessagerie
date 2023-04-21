@@ -9,7 +9,7 @@ public class LogDAO {
             if (n == -1)
                 return;
 
-            String request = "INSERT INTO log VALUES (" + n + ", " + log.getUserId() + ", '" + log.getTimestamp() + "', '" + log.getType() + "')";
+            String request = "INSERT INTO log (id, user_id, timestamp, type) VALUES (" + n + ", " + log.getUserId() + ", '" + log.getTimestamp() + "', '" + log.getType() + "')";
             Database.queryDDL(request);
         } catch (Exception e) {
             e.printStackTrace();

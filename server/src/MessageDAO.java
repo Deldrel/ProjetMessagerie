@@ -13,7 +13,7 @@ public class MessageDAO {
             if (n == -1)
                 return;
 
-            String request = "INSERT INTO message VALUES (" + n + ", " + message.getUserId() + ", '" + message.getTimestamp() + "', '" + message.getContent() + "')";
+            String request = "INSERT INTO message (id, user_id, timestamp, content) VALUES (" + n + ", " + message.getUserId() + ", '" + message.getTimestamp() + "', '" + message.getContent() + "')";
             Database.queryDDL(request);
         } catch (Exception e) {
             e.printStackTrace();
