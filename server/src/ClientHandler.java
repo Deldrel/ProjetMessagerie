@@ -127,7 +127,8 @@ public class ClientHandler implements Runnable {
                 }
                 case "getCurrentUserInfo" -> {
                     if (loggedin) {
-                        out.println(UserDAO.get(user_id, "id"));
+                        //out.println(UserDAO.get(user_id, "id"));
+                        out.println(UserDAO.get(user_id, "id").getUsername()+" "+UserDAO.get(user_id, "id").getId());
                         out.flush();
                     } else {
                         out.println("getCurrentUserInfo error");
