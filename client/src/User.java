@@ -100,7 +100,7 @@ public class User {
     }
 
     public String newAccountToString(){
-        return "newaccount "+ this.getUsername() +" "+ this.getFirstname()+" "+ this.getLastname()+" "+this.getEmail()+" "+this.getPassword();
+        return "newAccount "+ this.getUsername() +" "+ this.getFirstname()+" "+ this.getLastname()+" "+this.getEmail()+" "+this.getPassword();
     }
 
 }

@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseListener;
@@ -268,9 +269,7 @@ public class Interface {
             out.flush();
             line = in.readLine();
             String[] words = line.split("&");
-            for (int i = 0; i < words.length; i++) {
-                TabMessage.add(line);
-            }
+            Collections.addAll(TabMessage, words);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -288,11 +287,11 @@ public class Interface {
                 String[] words = TabMessage.get(i).split("#");
 
                 if (id == Integer.parseInt(words[0])) {
-                    Message.get(i).setText(words[1] + " " + words[3] + "\n" + words[4]);
+                    Message.get(i).setText(words[1] + " " + words[2] + " " + words[3]);
                     Message.get(i).setBounds(800, 500 - (i * 50), 200, 30);
                     panelChat.add(Message.get(i));
                 } else {
-                    Message.get(i).setText(words[1] + " " + words[3] + "\n" + words[4]);
+                    Message.get(i).setText(words[1] + " " + words[2] + " " + words[3]);
                     Message.get(i).setBounds(400, 500 - (i * 50), 200, 30);
                     panelChat.add(Message.get(i));
                 }

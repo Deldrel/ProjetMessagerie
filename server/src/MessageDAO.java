@@ -20,42 +20,6 @@ public class MessageDAO {
         }
     }
 
-    public static Message get(int id) {
-        if (connection == null) {
-            System.out.println("\033[31mDatabase connection is not established\033[0m");
-            return null;
-        }
-
-        Statement statement = null;
-
-        try {
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM log WHERE id = " + id);
-
-            if (resultSet.next()) {
-                int i = resultSet.getInt("id");
-                int user_id = resultSet.getInt("user_id");
-                Timestamp timestamp = resultSet.getTimestamp("timestamp");
-                String content = resultSet.getString("content");
-
-                return new Message(i, user_id, timestamp, content);
-            } else {
-                return null;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            try {
-                if (statement != null)
-                    statement.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public static String getNLastMessages(int n) {
         if (connection == null) {
             System.out.println("\033[31mDatabase connection is not established\033[0m");
@@ -66,10 +30,9 @@ public class MessageDAO {
 
         try {
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM message");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM message ORDER BY timestamp DESC LIMIT " + n);
 
-            ArrayList<Message> messages = new ArrayList<Message>();
-            String s = "";
+            ArrayList<Message> messages = new ArrayList<>();
 
             while (resultSet.next()) {
                 int i = resultSet.getInt("id");
@@ -79,10 +42,12 @@ public class MessageDAO {
 
                 messages.add(new Message(i, user_id, timestamp, content));
             }
-            for (int i = 0; i < messages.size(); i++) {
-                s= s + messages.get(i).toString()+" ";
+
+            StringBuilder result = new StringBuilder();
+            for (int i = messages.size() - 1; i >= 0; i--) {
+                result.append(messages.get(i).toString()).append("&");
             }
-            return s;
+            return result.toString();
 
         } catch (Exception e) {
             e.printStackTrace();
