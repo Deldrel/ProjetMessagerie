@@ -150,8 +150,8 @@ public class Interface {
             JButton buttonCreateNewAccount = createJButton("Create",190,300,100,30);
 
             actionListenerCreateNewAccount(buttonCreateNewAccount, textFieldFirstnameNewAccount, textFieldLastnameNewAccount, textFieldEmailNewAccount, textFieldUsernameNewAccount, textFieldPasswordNewAccount, dialog);
+            dialog.getContentPane().setBackground(BACKGROUND_COLOR);
             dialog.setSize(500, 500);
-            dialog.setBackground(BACKGROUND_COLOR);
             dialog.setLocationRelativeTo(null);
             dialog.add(labelFirtnameNewAccount);
             dialog.add(textFieldFirstnameNewAccount);
