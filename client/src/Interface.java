@@ -129,30 +129,29 @@ public class Interface {
             System.out.println("New Account");
             JDialog dialog = new JDialog(frame, "New Account", true);
             dialog.setLayout(null);
-            JLabel labelFirtnameNewAccount = new JLabel("Firstname");
-            labelFirtnameNewAccount.setBounds(100, 10, 100, 30);
-            JLabel labelLastnameNewAccount = new JLabel("Lastname");
-            labelLastnameNewAccount.setBounds(100, 60, 100, 30);
-            JLabel labelEmailNewAccount = new JLabel("Email");
-            labelEmailNewAccount.setBounds(100, 110, 100, 30);
-            JLabel labelUsernameNewAccount = new JLabel("Username");
-            labelUsernameNewAccount.setBounds(100, 160, 100, 30);
-            JLabel labelPasswordNewAccount = new JLabel("Password");
-            labelPasswordNewAccount.setBounds(100, 210, 100, 30);
-            JTextField textFieldFirstnameNewAccount = new JTextField(50);
-            textFieldFirstnameNewAccount.setBounds(210, 10, 200, 30);
-            JTextField textFieldLastnameNewAccount = new JTextField(50);
-            textFieldLastnameNewAccount.setBounds(210, 60, 200, 30);
-            JTextField textFieldEmailNewAccount = new JTextField(50);
-            textFieldEmailNewAccount.setBounds(210, 110, 200, 30);
-            JTextField textFieldUsernameNewAccount = new JTextField(50);
-            textFieldUsernameNewAccount.setBounds(210, 160, 200, 30);
+            JLabel labelFirtnameNewAccount = createJLabel("Firstname",100,30,100,30);
+            JLabel labelLastnameNewAccount = createJLabel("Lastname",100,80,100,30);
+            JLabel labelEmailNewAccount = createJLabel("Email",100,130,100,30);
+            JLabel labelUsernameNewAccount = createJLabel("Username",100,180,100,30);
+            JLabel labelPasswordNewAccount = createJLabel("Password",100,230,100,30);
+
+            JTextField textFieldFirstnameNewAccount = createJTextField(180,30,220,30);
+            JTextField textFieldLastnameNewAccount = createJTextField(180,80,220,30);
+            JTextField textFieldEmailNewAccount = createJTextField(180,130,220,30);
+            JTextField textFieldUsernameNewAccount = createJTextField(180,180,220,30);
+
             JPasswordField textFieldPasswordNewAccount = new JPasswordField(50);
-            textFieldPasswordNewAccount.setBounds(210, 210, 200, 30);
-            JButton buttonCreateNewAccount = new JButton("Create");
-            buttonCreateNewAccount.setBounds(190, 300, 100, 30);
+            textFieldPasswordNewAccount.setBounds(180, 230, 220, 30);
+            textFieldPasswordNewAccount.setBackground(BACKGROUND_TEXTFIELD_COLOR);
+            textFieldPasswordNewAccount.setForeground(Color.WHITE);
+            Border borderPassword = BorderFactory.createLineBorder(BACKGROUND_TEXTFIELD_BORDER_COLOR, 1);
+            textFieldPasswordNewAccount.setBorder(borderPassword);
+
+            JButton buttonCreateNewAccount = createJButton("Create",190,300,100,30);
+
             actionListenerCreateNewAccount(buttonCreateNewAccount, textFieldFirstnameNewAccount, textFieldLastnameNewAccount, textFieldEmailNewAccount, textFieldUsernameNewAccount, textFieldPasswordNewAccount, dialog);
             dialog.setSize(500, 500);
+            dialog.setBackground(BACKGROUND_COLOR);
             dialog.setLocationRelativeTo(null);
             dialog.add(labelFirtnameNewAccount);
             dialog.add(textFieldFirstnameNewAccount);
@@ -237,6 +236,7 @@ public class Interface {
 
     public void InitialisationFramChat(JFrame frameChat,JPanel panelChat) {
         JLabel labelPseudo = createJLabel("Username : ", 30, 30, 200, 30);
+        labelPseudo.setFont(new Font("stencil",Font.BOLD, 25));
         out.println("getCurrentUserInfo");
         out.flush();
         try {
@@ -290,7 +290,6 @@ public class Interface {
 
         // Tabbed pane
         JTabbedPane paneLogin = createJTabbedPane(800, 500);
-
 
         // panelLogin  / label
         JLabel labelPseudo = createJLabel("Username : ", 200, 30, 200, 30);
