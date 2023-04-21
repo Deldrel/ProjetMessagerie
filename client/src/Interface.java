@@ -18,8 +18,8 @@ import static java.lang.System.out;
 
 
 public class Interface {
-    PrintWriter out ;
-    BufferedReader in ;
+    PrintWriter out;
+    BufferedReader in;
 
 
     User user = new User();
@@ -28,6 +28,9 @@ public class Interface {
     private static final Color BACKGROUND_BUTTON_SURVOL_COLOR = Color.decode("#522ED3");
     private static final Color BACKGROUND_BUTTON_SURVOL_CLICK = Color.decode("#1B2956");
 
+    private static final int MAXMESSAGE = 10;
+
+    private static final Color BACKGROUND_BUTTON_BORDER_COLOR = Color.BLACK;
     private static final Color BACKGROUND_TEXTFIELD_COLOR = Color.decode("#1B2956");
     private static final Color BACKGROUND_TEXTFIELD_BORDER_COLOR = Color.decode("#212F60");
     private static final Color BACKGROUND_LABEL_COLOR = Color.decode("#7688BA");
@@ -41,7 +44,11 @@ public class Interface {
     int id = 0;
 
     String line;
-    ArrayList<JLabel> TabMessage = new ArrayList<>();
+    ArrayList<JLabel> Message = new ArrayList<>();
+
+    ArrayList<String> TabMessage = new ArrayList<>();
+
+    JLabel labelPseudo = createJLabel("Username : ", 30, 30, 200, 30);
 
 
     private JFrame createJFrame(String title, int width, int height) {
@@ -201,7 +208,7 @@ public class Interface {
                     System.out.println("Server replied " + line);
                     String[] words = line.split(" ");
                     if (Objects.equals(words[1], "success")) {
-                        InitialisationFramChat(frameChat,panelChat);
+                        UpdateFramChat();
                         frameLogin.dispose();
                         frameChat.setVisible(true);
                     }
@@ -217,6 +224,10 @@ public class Interface {
     public Interface(PrintWriter out, BufferedReader in) {
         this.out = out;
         this.in = in;
+        for (int i = 0; i < MAXMESSAGE; i++) {
+            JLabel newJlabel = createJLabel("", 800, 500, 200, 30);
+            Message.add(newJlabel);
+        }
     }
 
     public void actionListenerDeco(JButton buttonDeco) {
@@ -231,12 +242,11 @@ public class Interface {
             System.out.println("Server replied " + line);
             frameChat.dispose();
             frameLogin.setVisible(true);
+            panelChat.remove(labelPseudo);
         });
     }
 
-    public void InitialisationFramChat(JFrame frameChat,JPanel panelChat) {
-        JLabel labelPseudo = createJLabel("Username : ", 30, 30, 200, 30);
-        labelPseudo.setFont(new Font("stencil",Font.BOLD, 25));
+    public void UpdateFramChat() {
         out.println("getCurrentUserInfo");
         out.flush();
         try {
@@ -249,39 +259,47 @@ public class Interface {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        panelChat.add(labelPseudo);
 
-        out.println("getmessages 5");
-        out.flush();
 
         try {
-            // id time(date heure) content
+            // id#userId#username"time(date heure) content |
+            out.println("getMessages " + MAXMESSAGE);
+            out.flush();
             line = in.readLine();
-            String[] words = line.split(" ");
-
-
-            for (int i = 0; i < 5; i++) {
-                if (words.length < 3) {
-                    out.println("pas de message");
-                    out.flush();
-                    break;
-                }
-
-                /*if (id == Integer.parseInt(words[0])){
-                    JLabel newJlabel = createJLabel(words[3], 800, 500 - (i * 50), 200, 30);
-                    TabMessage.add(newJlabel);
-                    frameChat.add(TabMessage.get(i));
-                }*/
-                JLabel newJlabel = createJLabel(words[3], 400, 500 - (i * 50), 200, 30);
-                TabMessage.add(newJlabel);
-                panelChat.add(TabMessage.get(i));
+            String[] words = line.split("&");
+            for (int i = 0; i < words.length; i++) {
+                TabMessage.add(line);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        afficherMessage();
+    }
 
+    public void afficherMessage() {
+        int i = 0;
+        int fin = TabMessage.size();
+        if (TabMessage.size() > MAXMESSAGE) {
+            fin = MAXMESSAGE;
+        }
+        try {
+            for (i = 0; i < fin; i++) {
+                String[] words = TabMessage.get(i).split("#");
 
-        //add elements in the frameChat
-        panelChat.add(labelPseudo);
+                if (id == Integer.parseInt(words[0])) {
+                    Message.get(i).setText(words[1] + " " + words[3] + "\n" + words[4]);
+                    Message.get(i).setBounds(800, 500 - (i * 50), 200, 30);
+                    panelChat.add(Message.get(i));
+                } else {
+                    Message.get(i).setText(words[1] + " " + words[3] + "\n" + words[4]);
+                    Message.get(i).setBounds(400, 500 - (i * 50), 200, 30);
+                    panelChat.add(Message.get(i));
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void frameLogin(JFrame frameLogin) {
@@ -368,7 +386,6 @@ public class Interface {
         panelChat.add(textFieldChat);
         panelChat.add(buttonSend);
         panelChat.add(buttonDeco);
-
 
 
         // add elements to tabbed Pane

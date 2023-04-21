@@ -56,7 +56,7 @@ public class MessageDAO {
         }
     }
 
-    public static ArrayList<Message> getNLastMessages(int n) {
+    public static String getNLastMessages(int n) {
         if (connection == null) {
             System.out.println("\033[31mDatabase connection is not established\033[0m");
             return null;
@@ -66,9 +66,10 @@ public class MessageDAO {
 
         try {
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM message ORDER BY timestamp DESC LIMIT " + n);
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM message");
 
             ArrayList<Message> messages = new ArrayList<Message>();
+            String s = "";
 
             while (resultSet.next()) {
                 int i = resultSet.getInt("id");
@@ -78,8 +79,10 @@ public class MessageDAO {
 
                 messages.add(new Message(i, user_id, timestamp, content));
             }
-
-            return messages;
+            for (int i = 0; i < messages.size(); i++) {
+                s= s + messages.get(i).toString()+" ";
+            }
+            return s;
 
         } catch (Exception e) {
             e.printStackTrace();
