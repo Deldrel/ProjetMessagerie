@@ -1,5 +1,6 @@
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,12 +23,14 @@ public class Interface {
 
 
     User user = new User();
-    private static final Color BACKGROUND_COLOR = Color.decode("#081132");
+    private static final Color BACKGROUND_COLOR = Color.decode("#0B194A");
     private static final Color BACKGROUND_BUTTON_COLOR = Color.decode("#522ED3");
     private static final Color BACKGROUND_BUTTON_SURVOL_COLOR = Color.decode("#522ED3");
-    private static final Color BACKGROUND_BUTTON_SURVOL_CLICK = Color.decode("#78D1D8");
+    private static final Color BACKGROUND_BUTTON_SURVOL_CLICK = Color.decode("#1B2956");
 
-    private static final Color BACKGROUND_BUTTON_BORDER_COLOR = Color.BLACK;
+    private static final Color BACKGROUND_TEXTFIELD_COLOR = Color.decode("#1B2956");
+    private static final Color BACKGROUND_TEXTFIELD_BORDER_COLOR = Color.decode("#212F60");
+    private static final Color BACKGROUND_LABEL_COLOR = Color.decode("#7688BA");
 
     public JFrame frameLogin = createJFrame("Login", 800, 400);
     public JFrame frameChat = createJFrame("Chat", 1200, 800);
@@ -69,7 +72,7 @@ public class Interface {
     private JLabel createJLabel(String text, int x, int y, int width, int height) {
         JLabel label = new JLabel(text);
         label.setBounds(x, y, width, height);
-        label.setForeground(Color.WHITE);
+        label.setForeground(BACKGROUND_LABEL_COLOR);
         return label;
     }
 
@@ -77,8 +80,10 @@ public class Interface {
     private JTextField createJTextField(int x, int y, int width, int height) {
         JTextField textField = new JTextField(50);
         textField.setBounds(x, y, width, height);
-        textField.setBackground(Color.decode("#070D24"));
+        textField.setBackground(BACKGROUND_TEXTFIELD_COLOR);
         textField.setForeground(Color.WHITE);
+        Border border = BorderFactory.createLineBorder(BACKGROUND_TEXTFIELD_BORDER_COLOR, 1);
+        textField.setBorder(border);
         return textField;
     }
 
@@ -86,19 +91,30 @@ public class Interface {
     private JButton createJButton(String text, int x, int y, int width, int height) {
         JButton button = new JButton(text);
         button.setBounds(x, y, width, height);
-        button.setForeground(Color.RED);
+        button.setForeground(Color.WHITE);
         button.setBackground(BACKGROUND_BUTTON_COLOR);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setFont(new Font("Dialog", Font.BOLD, 14));
+        Border border= BorderFactory.createLineBorder(BACKGROUND_TEXTFIELD_BORDER_COLOR, 1);
+        button.setBorder(border);
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 button.setBackground(BACKGROUND_BUTTON_SURVOL_CLICK);
+                Border border= BorderFactory.createLineBorder(BACKGROUND_BUTTON_COLOR, 2);
+                button.setBorder(border);
+                button.setFont(new Font("Dialog", Font.BOLD, 14));
+                button.setForeground(BACKGROUND_BUTTON_COLOR);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 button.setBackground(BACKGROUND_BUTTON_SURVOL_COLOR);
+                button.setForeground(Color.WHITE);
+                Border border= BorderFactory.createLineBorder(BACKGROUND_TEXTFIELD_BORDER_COLOR, 1);
+                button.setBorder(border);
+
+
             }
         });
         return button;
@@ -279,7 +295,8 @@ public class Interface {
         // panelLogin  / label
         JLabel labelPseudo = createJLabel("Username : ", 200, 30, 200, 30);
         JLabel labelPassword = createJLabel("Password : ", 200, 80, 200, 30);
-        labelPassword.setForeground(Color.WHITE);
+        labelPassword.setForeground(BACKGROUND_LABEL_COLOR);
+
 
         // panelLogin / textField
         JTextField textFieldUsername = createJTextField(300, 30, 200, 30);
@@ -288,9 +305,10 @@ public class Interface {
         JPasswordField textFieldPassword = new JPasswordField(50);
         textFieldPassword.setBounds(300, 80, 200, 30);
         user.setPassword(String.valueOf(textFieldPassword.getPassword()));
-        textFieldPassword.setBackground(Color.BLACK);
+        textFieldPassword.setBackground(BACKGROUND_TEXTFIELD_COLOR);
         textFieldPassword.setForeground(Color.WHITE);
-
+        Border borderPassword = BorderFactory.createLineBorder(BACKGROUND_TEXTFIELD_BORDER_COLOR, 1);
+        textFieldPassword.setBorder(borderPassword);
 
         // panelLogin / bouton
         //------------button login
