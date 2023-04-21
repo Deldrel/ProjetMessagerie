@@ -291,18 +291,23 @@ public class Interface {
         // Tabbed pane
         JTabbedPane paneLogin = createJTabbedPane(800, 500);
 
+        JLabel labelLogo = createJLabel("",340,10,128,128);
+        ImageIcon icon = new ImageIcon("Images/bot.png");
+        labelLogo.setIcon(icon);
+
+
         // panelLogin  / label
-        JLabel labelPseudo = createJLabel("Username : ", 200, 30, 200, 30);
-        JLabel labelPassword = createJLabel("Password : ", 200, 80, 200, 30);
+        JLabel labelPseudo = createJLabel("Username : ", 200, 150, 200, 30);
+        JLabel labelPassword = createJLabel("Password : ", 200, 200, 200, 30);
         labelPassword.setForeground(BACKGROUND_LABEL_COLOR);
 
 
         // panelLogin / textField
-        JTextField textFieldUsername = createJTextField(300, 30, 200, 30);
+        JTextField textFieldUsername = createJTextField(300, 150, 200, 30);
         user.setUsername(textFieldUsername.getText());
 
         JPasswordField textFieldPassword = new JPasswordField(50);
-        textFieldPassword.setBounds(300, 80, 200, 30);
+        textFieldPassword.setBounds(300, 200, 200, 30);
         user.setPassword(String.valueOf(textFieldPassword.getPassword()));
         textFieldPassword.setBackground(BACKGROUND_TEXTFIELD_COLOR);
         textFieldPassword.setForeground(Color.WHITE);
@@ -311,14 +316,15 @@ public class Interface {
 
         // panelLogin / bouton
         //------------button login
-        JButton buttonLogin = createJButton("Login", 300, 150, 200, 30);
+        JButton buttonLogin = createJButton("Login", 300, 250, 200, 30);
         actionListenerLogin(buttonLogin, textFieldUsername, textFieldPassword);
 
         //------------button new account
-        JButton buttonNewAccount = createJButton("New Account", 300, 200, 200, 30);
+        JButton buttonNewAccount = createJButton("New Account", 300, 300, 200, 30);
         actionListenerNewAccount(buttonNewAccount, frameLogin);
 
         // panelLogin / add elements
+        panelLogin.add(labelLogo);
         panelLogin.add(labelPseudo);
         panelLogin.add(labelPassword);
         panelLogin.add(textFieldUsername);
