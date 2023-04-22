@@ -135,6 +135,15 @@ public class ClientHandler implements Runnable {
                         out.flush();
                     }
                 }
+                case "getAllUsers" -> {
+                    if (loggedin) {
+                        out.println(UserDAO.getAllUsers());
+                        out.flush();
+                    } else {
+                        out.println("getAllUsers error");
+                        out.flush();
+                    }
+                }
                 case "ban" -> {
                     if (words.length != 2) {
                         out.println("argument error");

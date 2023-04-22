@@ -2,6 +2,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.time.Duration;
+import java.util.ArrayList;
 
 public class UserDAO {
     private static final Connection connection = Database.getConnection();
@@ -94,6 +95,48 @@ public class UserDAO {
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public static ArrayList<User> getAllUsers() {
+        if (connection == null) {
+            System.out.println("\033[31mDatabase connection is not established\033[0m");
+            return null;
+        }
+
+        Statement statement = null;
+        ArrayList<User> users = new ArrayList<User>();
+
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM user");
+
+            while (resultSet.next()) {
+                int i = resultSet.getInt("id");
+                String username = resultSet.getString("username");
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                int permission = resultSet.getInt("permission");
+                Duration lastConnectionTime = Duration.parse(resultSet.getString("last_connection_time"));
+
+                users.add(new User(i, username, firstName, lastName, email, password, permission, lastConnectionTime));
+            }
+
+            return users;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         } finally {
             try {
                 if (statement != null)
