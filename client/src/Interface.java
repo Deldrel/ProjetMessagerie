@@ -2,6 +2,7 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -137,25 +138,30 @@ public class Interface {
             System.out.println("New Account");
             JDialog dialog = new JDialog(frame, "New Account", true);
             dialog.setLayout(null);
-            JLabel labelFirtnameNewAccount = createJLabel("Firstname",100,30,100,30);
-            JLabel labelLastnameNewAccount = createJLabel("Lastname",100,80,100,30);
-            JLabel labelEmailNewAccount = createJLabel("Email",100,130,100,30);
-            JLabel labelUsernameNewAccount = createJLabel("Username",100,180,100,30);
-            JLabel labelPasswordNewAccount = createJLabel("Password",100,230,100,30);
 
-            JTextField textFieldFirstnameNewAccount = createJTextField(180,30,220,30);
-            JTextField textFieldLastnameNewAccount = createJTextField(180,80,220,30);
-            JTextField textFieldEmailNewAccount = createJTextField(180,130,220,30);
-            JTextField textFieldUsernameNewAccount = createJTextField(180,180,220,30);
+            JLabel labelWellcome = createJLabel("",215,1,128,128);
+            ImageIcon icon = new ImageIcon("Images/welcome-back.png");
+            labelWellcome.setIcon(icon);
+
+            JLabel labelFirtnameNewAccount = createJLabel("Firstname",100,140,100,30);
+            JLabel labelLastnameNewAccount = createJLabel("Lastname",100,190,100,30);
+            JLabel labelEmailNewAccount = createJLabel("Email",100,240,100,30);
+            JLabel labelUsernameNewAccount = createJLabel("Username",100,290,100,30);
+            JLabel labelPasswordNewAccount = createJLabel("Password",100,340,100,30);
+
+            JTextField textFieldFirstnameNewAccount = createJTextField(180,140,220,30);
+            JTextField textFieldLastnameNewAccount = createJTextField(180,190,220,30);
+            JTextField textFieldEmailNewAccount = createJTextField(180,240,220,30);
+            JTextField textFieldUsernameNewAccount = createJTextField(180,290,220,30);
 
             JPasswordField textFieldPasswordNewAccount = new JPasswordField(50);
-            textFieldPasswordNewAccount.setBounds(180, 230, 220, 30);
+            textFieldPasswordNewAccount.setBounds(180, 340, 220, 30);
             textFieldPasswordNewAccount.setBackground(BACKGROUND_TEXTFIELD_COLOR);
             textFieldPasswordNewAccount.setForeground(Color.WHITE);
             Border borderPassword = BorderFactory.createLineBorder(BACKGROUND_TEXTFIELD_BORDER_COLOR, 1);
             textFieldPasswordNewAccount.setBorder(borderPassword);
 
-            JButton buttonCreateNewAccount = createJButton("Create",190,300,100,30);
+            JButton buttonCreateNewAccount = createJButton("Create",220,400,100,30);
 
             actionListenerCreateNewAccount(buttonCreateNewAccount, textFieldFirstnameNewAccount, textFieldLastnameNewAccount, textFieldEmailNewAccount, textFieldUsernameNewAccount, textFieldPasswordNewAccount, dialog);
             dialog.getContentPane().setBackground(BACKGROUND_COLOR);
@@ -172,6 +178,7 @@ public class Interface {
             dialog.add(labelPasswordNewAccount);
             dialog.add(textFieldPasswordNewAccount);
             dialog.add(buttonCreateNewAccount);
+            dialog.add(labelWellcome);
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         });
@@ -385,6 +392,7 @@ public class Interface {
         panelChat.add(textFieldChat);
         panelChat.add(buttonSend);
         panelChat.add(buttonDeco);
+       //panelChat.add()
 
 
         // add elements to tabbed Pane
