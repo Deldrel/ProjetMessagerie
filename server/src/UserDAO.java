@@ -106,7 +106,7 @@ public class UserDAO {
     }
 
 
-    public static ArrayList<User> getAllUsers() {
+    public static String getAllUsers() {
         if (connection == null) {
             System.out.println("\033[31mDatabase connection is not established\033[0m");
             return null;
@@ -131,8 +131,11 @@ public class UserDAO {
 
                 users.add(new User(i, username, firstName, lastName, email, password, permission, lastConnectionTime));
             }
-
-            return users;
+            StringBuilder result = new StringBuilder();
+            for (int i = users.size() - 1; i >= 0; i--) {
+                result.append(users.get(i).toString()).append("&");
+            }
+            return result.toString();
 
         } catch (Exception e) {
             e.printStackTrace();
