@@ -220,8 +220,7 @@ public class Interface {
 
             UpdateFramChat();
 
-
-
+            textFieldChat.setText("");
 
         });
     }
@@ -244,8 +243,8 @@ public class Interface {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-
-
+            textFieldPassword.setText("");
+            textFieldUsername.setText("");
         });
     }
 
@@ -283,9 +282,10 @@ public class Interface {
 
     public void UpdateFramChat() {
         ClearFramChat();
-        out.println("getCurrentUserInfo");
-        out.flush();
+
         try {
+            out.println("getCurrentUserInfo");
+            out.flush();
             line = in.readLine();
             String[] words = line.split(" ");
             labelPseudo.setText(words[0]);
@@ -309,6 +309,21 @@ public class Interface {
             ex.printStackTrace();
         }
         afficherMessage();
+
+        /*
+        try {
+            out.println("getCurrentUserInfo");
+            out.flush();
+            line = in.readLine();
+            String[] words = line.split(" ");
+            labelPseudo.setText(words[0]);
+            id = Integer.parseInt(words[1]);
+            System.out.println(id);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        */
         panelChat.repaint();
     }
 
