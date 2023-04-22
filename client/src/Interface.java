@@ -29,7 +29,7 @@ public class Interface {
     private static final Color BACKGROUND_BUTTON_SURVOL_COLOR = Color.decode("#522ED3");
     private static final Color BACKGROUND_BUTTON_SURVOL_CLICK = Color.decode("#1B2956");
 
-    private static final int MAXMESSAGE = 10;
+    private static final int MAXMESSAGE = 16;
 
     private static final Color BACKGROUND_BUTTON_BORDER_COLOR = Color.BLACK;
     private static final Color BACKGROUND_TEXTFIELD_COLOR = Color.decode("#1B2956");
@@ -37,7 +37,7 @@ public class Interface {
     private static final Color BACKGROUND_LABEL_COLOR = Color.decode("#7688BA");
 
     public JFrame frameLogin = createJFrame("Login", 800, 400);
-    public JFrame frameChat = createJFrame("Chat", 1200, 800);
+    public JFrame frameChat = createJFrame("Chat", 1200, 650);
 
     public JPanel panelChat = createJPanel();
     public JPanel panelLogin = createJPanel();
@@ -103,13 +103,13 @@ public class Interface {
         button.setBackground(BACKGROUND_BUTTON_COLOR);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         button.setFont(new Font("Dialog", Font.BOLD, 14));
-        Border border= BorderFactory.createLineBorder(BACKGROUND_TEXTFIELD_BORDER_COLOR, 1);
+        Border border = BorderFactory.createLineBorder(BACKGROUND_TEXTFIELD_BORDER_COLOR, 1);
         button.setBorder(border);
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 button.setBackground(BACKGROUND_BUTTON_SURVOL_CLICK);
-                Border border= BorderFactory.createLineBorder(BACKGROUND_BUTTON_COLOR, 2);
+                Border border = BorderFactory.createLineBorder(BACKGROUND_BUTTON_COLOR, 2);
                 button.setBorder(border);
                 button.setFont(new Font("Dialog", Font.BOLD, 14));
                 button.setForeground(BACKGROUND_BUTTON_COLOR);
@@ -119,7 +119,7 @@ public class Interface {
             public void mouseExited(MouseEvent e) {
                 button.setBackground(BACKGROUND_BUTTON_SURVOL_COLOR);
                 button.setForeground(Color.WHITE);
-                Border border= BorderFactory.createLineBorder(BACKGROUND_TEXTFIELD_BORDER_COLOR, 1);
+                Border border = BorderFactory.createLineBorder(BACKGROUND_TEXTFIELD_BORDER_COLOR, 1);
                 button.setBorder(border);
 
 
@@ -137,16 +137,16 @@ public class Interface {
             System.out.println("New Account");
             JDialog dialog = new JDialog(frame, "New Account", true);
             dialog.setLayout(null);
-            JLabel labelFirtnameNewAccount = createJLabel("Firstname",100,30,100,30);
-            JLabel labelLastnameNewAccount = createJLabel("Lastname",100,80,100,30);
-            JLabel labelEmailNewAccount = createJLabel("Email",100,130,100,30);
-            JLabel labelUsernameNewAccount = createJLabel("Username",100,180,100,30);
-            JLabel labelPasswordNewAccount = createJLabel("Password",100,230,100,30);
+            JLabel labelFirtnameNewAccount = createJLabel("Firstname", 100, 30, 100, 30);
+            JLabel labelLastnameNewAccount = createJLabel("Lastname", 100, 80, 100, 30);
+            JLabel labelEmailNewAccount = createJLabel("Email", 100, 130, 100, 30);
+            JLabel labelUsernameNewAccount = createJLabel("Username", 100, 180, 100, 30);
+            JLabel labelPasswordNewAccount = createJLabel("Password", 100, 230, 100, 30);
 
-            JTextField textFieldFirstnameNewAccount = createJTextField(180,30,220,30);
-            JTextField textFieldLastnameNewAccount = createJTextField(180,80,220,30);
-            JTextField textFieldEmailNewAccount = createJTextField(180,130,220,30);
-            JTextField textFieldUsernameNewAccount = createJTextField(180,180,220,30);
+            JTextField textFieldFirstnameNewAccount = createJTextField(180, 30, 220, 30);
+            JTextField textFieldLastnameNewAccount = createJTextField(180, 80, 220, 30);
+            JTextField textFieldEmailNewAccount = createJTextField(180, 130, 220, 30);
+            JTextField textFieldUsernameNewAccount = createJTextField(180, 180, 220, 30);
 
             JPasswordField textFieldPasswordNewAccount = new JPasswordField(50);
             textFieldPasswordNewAccount.setBounds(180, 230, 220, 30);
@@ -155,7 +155,7 @@ public class Interface {
             Border borderPassword = BorderFactory.createLineBorder(BACKGROUND_TEXTFIELD_BORDER_COLOR, 1);
             textFieldPasswordNewAccount.setBorder(borderPassword);
 
-            JButton buttonCreateNewAccount = createJButton("Create",190,300,100,30);
+            JButton buttonCreateNewAccount = createJButton("Create", 190, 300, 100, 30);
 
             actionListenerCreateNewAccount(buttonCreateNewAccount, textFieldFirstnameNewAccount, textFieldLastnameNewAccount, textFieldEmailNewAccount, textFieldUsernameNewAccount, textFieldPasswordNewAccount, dialog);
             dialog.getContentPane().setBackground(BACKGROUND_COLOR);
@@ -196,6 +196,26 @@ public class Interface {
                 throw new RuntimeException(e);
             }
             dialog.dispose();
+        });
+    }
+
+    public void actionListenerSend(JButton buttonSend, JTextField textFieldChat) {
+        buttonSend.addActionListener(e -> {
+            out.println("sendMessage " + textFieldChat.getText());
+            out.flush();
+            try {
+                line = in.readLine();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            System.out.println("Server replied " + line);
+
+
+            UpdateFramChat();
+
+
+
+
         });
     }
 
@@ -243,11 +263,19 @@ public class Interface {
             System.out.println("Server replied " + line);
             frameChat.dispose();
             frameLogin.setVisible(true);
-            panelChat.remove(labelPseudo);
         });
     }
 
+    public void ClearFramChat() {
+        panelChat.remove(labelPseudo);
+        TabMessage.clear();
+        for (int i = 0; i < Message.size(); i++) {
+            panelChat.remove(Message.get(i));
+        }
+    }
+
     public void UpdateFramChat() {
+        ClearFramChat();
         out.println("getCurrentUserInfo");
         out.flush();
         try {
@@ -274,27 +302,42 @@ public class Interface {
             ex.printStackTrace();
         }
         afficherMessage();
+        panelChat.repaint();
     }
 
     public void afficherMessage() {
-        int i = 0;
-        int fin = TabMessage.size();
+        int i = TabMessage.size()-1;
+        int fin = 0;
+        int j=0;
+        int l=0;
         if (TabMessage.size() > MAXMESSAGE) {
-            fin = MAXMESSAGE;
+            fin = TabMessage.size()-MAXMESSAGE;
+        }
+        if (TabMessage.size() < MAXMESSAGE){
+            fin = 0;
         }
         try {
-            for (i = 0; i < fin; i++) {
+            for (i = TabMessage.size()-1; i > fin; i--) {
                 String[] words = TabMessage.get(i).split("#");
 
                 if (id == Integer.parseInt(words[0])) {
-                    Message.get(i).setText(words[1] + " " + words[2] + " " + words[3]);
-                    Message.get(i).setBounds(800, 500 - (i * 50), 200, 30);
-                    panelChat.add(Message.get(i));
+                    Message.get(j).setText(words[1] + " " + words[2] + ":");
+                    Message.get(j).setBounds(800, 385 - (l * 50), 200, 30);
+                    Message.get(j+1).setText(words[3]);
+                    Message.get(j+1).setBounds(800, 400 - (l * 50), 200, 30);
+                    panelChat.add(Message.get(j));
+                    panelChat.add(Message.get(j+1));
                 } else {
-                    Message.get(i).setText(words[1] + " " + words[2] + " " + words[3]);
-                    Message.get(i).setBounds(400, 500 - (i * 50), 200, 30);
-                    panelChat.add(Message.get(i));
+                    Message.get(j).setText(words[1] + " " + words[2] + ":");
+                    Message.get(j).setBounds(400, 385 - (l * 50), 200, 30);
+                    Message.get(j+1).setText(words[3]);
+                    Message.get(j+1).setBounds(400, 400 - (l * 50), 200, 30);
+                    panelChat.add(Message.get(j));
+                    panelChat.add(Message.get(j+1));
                 }
+                j++;
+                j++;
+                l++;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -308,7 +351,7 @@ public class Interface {
         // Tabbed pane
         JTabbedPane paneLogin = createJTabbedPane(800, 500);
 
-        JLabel labelLogo = createJLabel("",340,10,128,128);
+        JLabel labelLogo = createJLabel("", 340, 10, 128, 128);
         ImageIcon icon = new ImageIcon("Images/bot.png");
         labelLogo.setIcon(icon);
 
@@ -362,17 +405,18 @@ public class Interface {
         //JPanel panelChat = createJPanel();
 
         // Tabbed pane
-        JTabbedPane paneChat = createJTabbedPane(1200, 800);
+        JTabbedPane paneChat = createJTabbedPane(1200, 650);
 
         // panelChat / label
 
         // panelChat / textField
-        JTextField textFieldChat = createJTextField(250, 680, 790, 50);
+        JTextField textFieldChat = createJTextField(250, 490, 790, 50);
 
         // panelChat / bouton
         //------------button send
-        JButton buttonSend = createJButton("Send", 1060, 690, 100, 30);
+        JButton buttonSend = createJButton("Send", 1060, 500, 100, 30);
         JButton buttonDeco = createJButton("", 1100, 30, 40, 40);
+        actionListenerSend(buttonSend, textFieldChat);
 
         buttonDeco.setIcon(new ImageIcon("Images/se-deconnecter.png"));
         buttonDeco.setContentAreaFilled(false);
