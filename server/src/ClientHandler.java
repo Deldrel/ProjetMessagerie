@@ -45,10 +45,10 @@ public class ClientHandler implements Runnable {
             line = line.replaceAll("'", " ").replaceAll("\"", " ");
             String[] words = line.split(" ");
 
-            LogDAO.add(new Log(0, user_id, new Timestamp(System.currentTimeMillis()), "Client: " + line));
 
             switch (words[0]) {
                 case "sendMessage" -> {
+                    LogDAO.add(new Log(0, user_id, new Timestamp(System.currentTimeMillis()), "Client: " + line));
                     if (loggedin) {
                         StringBuilder message = new StringBuilder();
                         for (int i = 1; i < words.length; i++) {
@@ -64,6 +64,7 @@ public class ClientHandler implements Runnable {
                     }
                 }
                 case "getMessages" -> {
+
                     if (words.length != 2) {
                         out.println("argument error");
                         out.flush();
@@ -79,6 +80,8 @@ public class ClientHandler implements Runnable {
                     }
                 }
                 case "login" -> {
+                    LogDAO.add(new Log(0, user_id, new Timestamp(System.currentTimeMillis()), "Client: " + line));
+
                     if (words.length != 3) {
                         out.println("argument error");
                         out.flush();
@@ -89,6 +92,8 @@ public class ClientHandler implements Runnable {
                     out.flush();
                 }
                 case "logout" -> {
+                    LogDAO.add(new Log(0, user_id, new Timestamp(System.currentTimeMillis()), "Client: " + line));
+
                     if (loggedin) {
                         loggedin = false;
                         user_id = -1;
@@ -100,6 +105,8 @@ public class ClientHandler implements Runnable {
                     }
                 }
                 case "newAccount" -> {
+                    LogDAO.add(new Log(0, user_id, new Timestamp(System.currentTimeMillis()), "Client: " + line));
+
                     if (words.length != 6) {
                         out.println("argument error");
                         out.flush();
@@ -127,8 +134,8 @@ public class ClientHandler implements Runnable {
                 }
                 case "getCurrentUserInfo" -> {
                     if (loggedin) {
-                        //out.println(UserDAO.get(user_id, "id"));
-                        out.println(UserDAO.get(user_id, "id").getUsername()+" "+UserDAO.get(user_id, "id").getId());
+                        out.println(UserDAO.get(user_id, "id"));
+                        //out.println(UserDAO.get(user_id, "id").getUsername()+" "+UserDAO.get(user_id, "id").getId());
                         out.flush();
                     } else {
                         out.println("getCurrentUserInfo error");
@@ -145,6 +152,8 @@ public class ClientHandler implements Runnable {
                     }
                 }
                 case "ban" -> {
+                    LogDAO.add(new Log(0, user_id, new Timestamp(System.currentTimeMillis()), "Client: " + line));
+
                     if (words.length != 2) {
                         out.println("argument error");
                         out.flush();
@@ -152,13 +161,13 @@ public class ClientHandler implements Runnable {
                     }
                     if (loggedin) {
                         int thispermission = UserDAO.get(user_id, "id").getPermission();
-                        int argpermission = UserDAO.get(words[1], "id").getPermission();
+                        int argpermission = UserDAO.get(words[1], "username").getPermission();
                         if (thispermission <= 1 || thispermission <= argpermission) {
                             out.println("ban error");
                             out.flush();
                             break;
                         }
-                        UserDAO.modifyUserField(Integer.parseInt(words[1]), "permission", 0);
+                        UserDAO.modifyUserField(words[1], "permission", 0);
                         out.println("ban success");
                         out.flush();
                     } else {

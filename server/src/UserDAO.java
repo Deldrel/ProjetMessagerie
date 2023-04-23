@@ -20,14 +20,13 @@ public class UserDAO {
         }
     }
 
-    public static <T> void modifyUserField(int id, String columnLabel, T value) {
+    public static <T> void modifyUserField(String username, String columnLabel, T value) {
         try {
             if (columnLabel.equals("id"))
                 throw new Exception("You can't modify the id of a user");
             if (columnLabel.equals("password"))
                 value = (T) sha1((String) value);
-
-            String request = "UPDATE user SET " + columnLabel + " = '" + value + "' WHERE id = " + id;
+            String request = "UPDATE user SET " + columnLabel + " = '" + value + "' WHERE username = '" + username + "'";
             Database.queryDDL(request);
         } catch (Exception e) {
             System.out.println("\033[31m" + e.getMessage() + "\033[0m");

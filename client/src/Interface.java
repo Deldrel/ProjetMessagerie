@@ -17,6 +17,7 @@ import java.util.Objects;
 public class Interface {
     PrintWriter out;
     BufferedReader in;
+    Timer timer;
 
 
     User user = new User();
@@ -205,7 +206,50 @@ public class Interface {
         });
     }
 
-    public void actionListenerSend(JButton buttonSend, JTextField textFieldChat) {
+    public void actionListenerBan(JButton buttonBan, JFrame frame) {
+        buttonBan.addActionListener(e -> {
+            JDialog dialog = new JDialog(frame, "Ban", true);
+            dialog.setLayout(null);
+
+
+            JLabel labelUsernameBan = createJLabel("Choose the person you want to ban :", 50, 50, 400, 30);
+            JComboBox<String> comboBoxUsernames = new JComboBox<>();
+            comboBoxUsernames.setBounds(90, 100, 100, 30);
+            for (int i = 0; i < TabUser.size(); i++) {
+                String[] words = TabUser.get(i).split("#");
+                comboBoxUsernames.addItem(words[1]);
+                comboBoxUsernames.setBackground(BACKGROUND_BUTTON_COLOR);
+                comboBoxUsernames.setForeground(Color.WHITE);
+            }
+            System.out.println(comboBoxUsernames.getItemCount());
+            JButton buttonBanUser = createJButton("Ban", 205, 100, 100, 30);
+            actionListenerBanUser(buttonBanUser, comboBoxUsernames, dialog);
+            dialog.getContentPane().setBackground(BACKGROUND_COLOR);
+            dialog.setSize(400, 300);
+            dialog.setLocationRelativeTo(null);
+            dialog.add(labelUsernameBan);
+            dialog.add(comboBoxUsernames);
+            dialog.add(buttonBanUser);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        });
+    }
+
+    private void actionListenerBanUser(JButton buttonBanUser, JComboBox<String> comboBoxUsernames, JDialog dialog) {
+        buttonBanUser.addActionListener(e -> {
+            System.out.println("You banned " + comboBoxUsernames.getSelectedItem());
+            out.println("ban " + comboBoxUsernames.getSelectedItem());
+            out.flush();
+            try {
+                System.out.println("Server replied" + in.readLine());
+            } catch (IOException e1) {
+                throw new RuntimeException(e1);
+            }
+            dialog.dispose();
+        });
+    }
+
+    public void actionListenerSend(JButton buttonSend, JTextField textFieldChat, JFrame frameChat) {
         buttonSend.addActionListener(e -> {
             if (!Objects.equals(textFieldChat.getText(), "")) {
                 out.println("sendMessage " + textFieldChat.getText());
@@ -216,9 +260,6 @@ public class Interface {
                     throw new RuntimeException(ex);
                 }
                 System.out.println("Server replied " + line);
-
-
-                UpdateFramChat();
 
                 textFieldChat.setText("");
 
@@ -237,7 +278,7 @@ public class Interface {
                     System.out.println("Server replied " + line);
                     String[] words = line.split(" ");
                     if (Objects.equals(words[1], "success")) {
-                        UpdateFramChat();
+                        UpdateFramChat(frameChat);
                         frameLogin.dispose();
                         frameChat.setVisible(true);
                     }
@@ -290,19 +331,34 @@ public class Interface {
         }
     }
 
-    public void UpdateFramChat() {
+    public void UpdateFramChat(JFrame frameChat) {
         ClearFramChat();
-
         try {
             out.println("getCurrentUserInfo");
             out.flush();
             line = in.readLine();
-            String[] words = line.split(" ");
-            labelPseudo.setText(words[0]);
-            id = Integer.parseInt(words[1]);
-            System.out.println(id);
+            if (line != null && !line.endsWith("error")){
+            String[] words = line.split("#");
+            labelPseudo.setText(words[1]);
+            id = Integer.parseInt(words[0]);
+            if(Integer.parseInt(words[3]) == 0){;
+               JDialog dialog = new JDialog(frameChat, "Ban", true);
+                dialog.setLayout(null);
+                JLabel labelUsernameBan = createJLabel("You have been banned", 250, 275, 1150, 60);
+                //changer la taille du texte
+                labelUsernameBan.setFont(new Font("Dialog", Font.BOLD, 50));
+                //changer la couleur du texte
+                labelUsernameBan.setForeground(Color.RED);
+                System.out.println("You have been banned");
+                dialog.getContentPane().setBackground(BACKGROUND_COLOR);
+                dialog.setSize(1200, 650);
+                dialog.setLocationRelativeTo(null);
+                dialog.add(labelUsernameBan);
+                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setVisible(true);
+            };
 
-        } catch (Exception ex) {
+        }} catch (Exception ex) {
             ex.printStackTrace();
         }
         panelChat.add(labelPseudo);
@@ -337,9 +393,12 @@ public class Interface {
     }
 
     public void afficherUser(){
-        for (int i = 0; i < TabUser.size(); i++) {
+        for (int i = 0; i < TabUser.size() ; i++) {
             String[] words = TabUser.get(i).split("#");
-            User.get(i).setText(words[2]);
+            if( words.length < 2){
+                continue;
+            }
+            User.get(i).setText(words[1]);
             User.get(i).setBounds(100, 350 - (i * 50), 200, 50);
             panelChat.add(User.get(i));
         }
@@ -456,19 +515,29 @@ public class Interface {
         //------------button send
         JButton buttonSend = createJButton("Send", 1060, 500, 100, 30);
         JButton buttonDeco = createJButton("", 1100, 30, 40, 40);
-        actionListenerSend(buttonSend, textFieldChat);
+        JButton buttonBan = createJButton("", 1100, 70, 40, 40);
+        actionListenerSend(buttonSend, textFieldChat, frameChat);
 
+        //------------button deco
         buttonDeco.setIcon(new ImageIcon("Images/se-deconnecter.png"));
         buttonDeco.setContentAreaFilled(false);
         buttonDeco.setBorderPainted(false);
         buttonDeco.setFocusPainted(false);
         actionListenerDeco(buttonDeco);
 
-        // panelChat / add elements
+        //------------button ban
+        buttonBan.setIcon(new ImageIcon("Images/ban.png"));
+        buttonBan.setContentAreaFilled(false);
+        buttonBan.setBorderPainted(false);
+        buttonBan.setFocusPainted(false);
+        actionListenerBan(buttonBan, frameChat);
 
+
+        // panelChat / add elements
         panelChat.add(textFieldChat);
         panelChat.add(buttonSend);
         panelChat.add(buttonDeco);
+        panelChat.add(buttonBan);
 
 
         // add elements to tabbed Pane
@@ -481,6 +550,8 @@ public class Interface {
 
     public void createInterface() {
         // Frame
+        timer = new Timer(100, e -> UpdateFramChat(frameChat));
+        timer.start();
         frameLogin();
         frameChat();
     }
