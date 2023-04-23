@@ -1,8 +1,9 @@
-import java.awt.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
@@ -13,12 +14,10 @@ public class Client {
             Scanner sc = new Scanner(System.in);
             String line = null;
 
+            Interface ui = new Interface(out, in);
+            ui.createInterface();
 
-
-             Interface ui = new Interface(out,in);
-             ui.createInterface();
-
-
+            //new UI(out, in);
 
             while (!"exit".equalsIgnoreCase(line)) {
                 line = sc.nextLine();
@@ -30,7 +29,7 @@ public class Client {
             socket.close();
             sc.close();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
