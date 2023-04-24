@@ -16,6 +16,7 @@ public class UserDAO {
             Database.queryDDL(request);
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
 
