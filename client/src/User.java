@@ -10,8 +10,8 @@ public class User {
     private int permission;
     private Duration lastLogin;
     private boolean banned;
-    private enum state {online, offline};
     private Duration lastConnectionTime;
+    private int status;
 
     public User() {
         this.id = -1;
@@ -22,9 +22,10 @@ public class User {
         this.password = "";
         this.permission = -1;
         this.lastConnectionTime = Duration.ZERO;
+        this.status = -1;
     }
 
-    public User(int id, String username, String firstName, String lastName, String email, String password, int permission, Duration lastConnectionTime) {
+    public User(int id, String username, String firstName, String lastName, String email, String password, int permission, Duration lastConnectionTime, int status) {
         this.id = id;
         this.username = username;
         this.firstname = firstName;
@@ -33,6 +34,7 @@ public class User {
         this.password = password;
         this.permission = permission;
         this.lastConnectionTime = lastConnectionTime;
+        this.status = status;
     }
 
     public int getId() {
@@ -66,6 +68,9 @@ public class User {
     public Duration getLastConnectionTime() {
         return lastConnectionTime;
     }
+    public int getStatus() {
+        return status;
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -98,9 +103,12 @@ public class User {
     public void setLastConnectionTime(Duration lastConnectionTime) {
         this.lastConnectionTime = lastConnectionTime;
     }
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public String newAccountToString(){
-        return "newAccount "+ this.getUsername() +" "+ this.getFirstname()+" "+ this.getLastname()+" "+this.getEmail()+" "+this.getPassword();
+        return "newAccount "+ this.getUsername() +" "+ this.getFirstname()+" "+ this.getLastname()+" "+this.getEmail()+" "+this.getPassword()+" "+this.getPermission()+" "+this.getLastConnectionTime()+" "+this.getStatus();
     }
 
 }

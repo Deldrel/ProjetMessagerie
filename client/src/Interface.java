@@ -193,6 +193,7 @@ public class Interface {
             newUser.setEmail(textFieldEmailNewAccount.getText());
             newUser.setUsername(textFieldUsernameNewAccount.getText());
             newUser.setPassword(textFieldPasswordNewAccount.getText());
+            newUser.setStatus(0);
             VueUser vueUser = new VueUser();
             ControlUser controlUser = new ControlUser(newUser, vueUser);
             out.println(vueUser.newAccountToString(newUser));
@@ -318,6 +319,33 @@ public class Interface {
             frameLogin.setVisible(true);
         });
     }
+   /* public void actionListenerStatus(JButton buttonStatus, JFrame frame) {
+        buttonStatus.addActionListener(e -> {
+                JDialog dialog = new JDialog(frame, "Status", true);
+                dialog.setLayout(null);
+
+                JLabel labelStatus = createJLabel("Choose your status :", 50, 50, 400, 30);
+                JComboBox<String> comboBoxStatus = new JComboBox<>();
+                comboBoxStatus.setBounds(90, 100, 100, 30);
+                for (int i = 0; i < TabUser.size(); i++) {
+                    String[] words = TabUser.get(i).split("#");
+                    comboBoxStatus.addItem(words[4]); //TODO: add status
+                    comboBoxStatus.setBackground(BACKGROUND_BUTTON_COLOR);
+                    comboBoxStatus.setForeground(Color.WHITE);
+                }
+                System.out.println(comboBoxStatus.getItemCount());
+                JButton buttonSaveStatus = createJButton("Save", 205, 100, 100, 30);
+                //actionListenerSaveStatus(buttonSaveStatus, comboBoxStatus, dialog); //TODO: add actionListener
+                dialog.getContentPane().setBackground(BACKGROUND_COLOR);
+                dialog.setSize(400, 300);
+                dialog.setLocationRelativeTo(null);
+                dialog.add(labelStatus);
+                dialog.add(comboBoxStatus);
+                dialog.add(buttonSaveStatus);
+                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setVisible(true);
+            });
+    }*/
 
     public void ClearFramChat() {
         panelChat.remove(labelPseudo);
@@ -345,9 +373,7 @@ public class Interface {
                JDialog dialog = new JDialog(frameChat, "Ban", true);
                 dialog.setLayout(null);
                 JLabel labelUsernameBan = createJLabel("You have been banned", 250, 275, 1150, 60);
-                //changer la taille du texte
                 labelUsernameBan.setFont(new Font("Dialog", Font.BOLD, 50));
-                //changer la couleur du texte
                 labelUsernameBan.setForeground(Color.RED);
                 System.out.println("You have been banned");
                 dialog.getContentPane().setBackground(BACKGROUND_COLOR);
@@ -400,6 +426,16 @@ public class Interface {
             }
             User.get(i).setText(words[1]);
             User.get(i).setBounds(100, 350 - (i * 50), 200, 50);
+            if (user.getStatus() == 0){
+                JLabel labelStatusOffline = createJLabel("", 70, 350 - (i * 50), 20, 20);
+                labelStatusOffline.setIcon(new ImageIcon("Images/red_circle.png"));
+            } else if (user.getStatus() == 1) {
+                JLabel labelStatusOnline = createJLabel("", 70, 350 - (i * 50), 10, 10);
+                labelStatusOnline.setIcon(new ImageIcon("Images/light_blue_circle.png"));
+            } else if (user.getStatus() == 2) {
+                JLabel labelStatusAway = createJLabel("", 70, 350 - (i * 50), 10, 10);
+                labelStatusAway.setIcon(new ImageIcon("Images/dark_blue_circle.png"));
+            }
             panelChat.add(User.get(i));
         }
     }
@@ -516,7 +552,9 @@ public class Interface {
         JButton buttonSend = createJButton("Send", 1060, 500, 100, 30);
         JButton buttonDeco = createJButton("", 1100, 30, 40, 40);
         JButton buttonBan = createJButton("", 1100, 70, 40, 40);
+       // JButton buttonStatus = createJButton("Status", 30, 60, 70, 25);
         actionListenerSend(buttonSend, textFieldChat, frameChat);
+        //actionListenerStatus(buttonStatus, frameChat);
 
         //------------button deco
         buttonDeco.setIcon(new ImageIcon("Images/se-deconnecter.png"));
@@ -534,6 +572,7 @@ public class Interface {
 
 
         // panelChat / add elements
+        //panelChat.add(buttonStatus);
         panelChat.add(textFieldChat);
         panelChat.add(buttonSend);
         panelChat.add(buttonDeco);

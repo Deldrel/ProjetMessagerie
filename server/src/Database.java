@@ -62,7 +62,7 @@ public class Database {
         queryDDL("DROP DATABASE IF EXISTS " + database);
         queryDDL("CREATE DATABASE IF NOT EXISTS " + database);
         queryDDL("USE " + database);
-        queryDDL("CREATE TABLE IF NOT EXISTS user (id INT NOT NULL, username VARCHAR(255) NOT NULL, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, permission INT NOT NULL, last_connection_time VARCHAR(255) NOT NULL, PRIMARY KEY (id))");
+        queryDDL("CREATE TABLE IF NOT EXISTS user (id INT NOT NULL, username VARCHAR(255) NOT NULL, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, permission INT NOT NULL, last_connection_time VARCHAR(255) NOT NULL, PRIMARY KEY (id), status INT NOT NULL)");
         queryDDL("CREATE TABLE IF NOT EXISTS message (id INT NOT NULL, user_id INT NOT NULL, timestamp DATETIME NOT NULL, content VARCHAR(255) NOT NULL, PRIMARY KEY (id))");
         queryDDL("CREATE TABLE IF NOT EXISTS log (id INT NOT NULL, user_id INT NOT NULL, timestamp DATETIME NOT NULL, type VARCHAR(255) NOT NULL, PRIMARY KEY (id))");
       }

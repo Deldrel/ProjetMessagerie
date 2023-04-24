@@ -9,6 +9,7 @@ public class User {
     private String password;
     private int permission;
     private Duration lastConnectionTime;
+    private int status;
 
     public User() {
         this.id = -1;
@@ -19,9 +20,10 @@ public class User {
         this.password = "";
         this.permission = -1; //0 = ban; 1 = user; 2 = moderateur; 3 = admin
         this.lastConnectionTime = Duration.ZERO;
+        this.status = -1; //0 = offline; 1 = online; 2 = away
     }
 
-    public User(int id, String username, String firstName, String lastName, String email, String password, int permission, Duration lastConnectionTime) {
+    public User(int id, String username, String firstName, String lastName, String email, String password, int permission, Duration lastConnectionTime, int status) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -30,6 +32,7 @@ public class User {
         this.password = password;
         this.permission = permission;
         this.lastConnectionTime = lastConnectionTime;
+        this.status = status;
     }
 
     public int getId() {
@@ -63,6 +66,9 @@ public class User {
     public Duration getLastConnectionTime() {
         return lastConnectionTime;
     }
+    public int getStatus() {
+        return status;
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -95,9 +101,12 @@ public class User {
     public void setLastConnectionTime(Duration lastConnectionTime) {
         this.lastConnectionTime = lastConnectionTime;
     }
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     @Override
     public String toString() {
-        return id + "#" + username + "#"+ lastConnectionTime + "#" + permission;
+        return id + "#" + username + "#"+ lastConnectionTime + "#" + permission + "#" + status;
     }
 }

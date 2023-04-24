@@ -113,7 +113,7 @@ public class ClientHandler implements Runnable {
                         break;
                     }
 
-                    UserDAO.add(new User(0, words[1], words[2], words[3], words[4], words[5], -1, Duration.ZERO));
+                    UserDAO.add(new User(0, words[1], words[2], words[3], words[4], words[5], -1, Duration.ZERO, 0));
                     out.println("newAccount success");
                     out.flush();
                 }
