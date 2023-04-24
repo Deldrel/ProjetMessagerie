@@ -116,13 +116,13 @@ public class ClientHandler implements Runnable {
                 case "newAccount" -> {
                     LogDAO.add(new Log(0, user_id, new Timestamp(System.currentTimeMillis()), "Client: " + line));
 
-                    if (words.length != 6) {
+                    if (words.length != 9) {
                         out.println("argument error");
                         out.flush();
                         break;
                     }
 
-                    UserDAO.add(new User(0, words[1], words[2], words[3], words[4], words[5], -1, Duration.ZERO, 0));
+                    UserDAO.add(new User(0, words[1], words[2], words[3], words[4], words[5], -1, Duration.ZERO, 1));
                     out.println("newAccount success");
                     out.flush();
                 }

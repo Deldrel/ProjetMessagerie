@@ -6,8 +6,6 @@ import org.jfree.data.general.DefaultPieDataset;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -310,8 +308,8 @@ public class Interface {
         }
     }
 
-    public void actionListenerDeco(JButton buttonDeco) {
-        buttonDeco.addActionListener(e -> {
+    public void actionListenerLogout(JButton buttonLogout) {
+        buttonLogout.addActionListener(e -> {
             out.println("logout");
             out.flush();
             try {
@@ -324,33 +322,6 @@ public class Interface {
             frameLogin.setVisible(true);
         });
     }
-   /* public void actionListenerStatus(JButton buttonStatus, JFrame frame) {
-        buttonStatus.addActionListener(e -> {
-                JDialog dialog = new JDialog(frame, "Status", true);
-                dialog.setLayout(null);
-
-                JLabel labelStatus = createJLabel("Choose your status :", 50, 50, 400, 30);
-                JComboBox<String> comboBoxStatus = new JComboBox<>();
-                comboBoxStatus.setBounds(90, 100, 100, 30);
-                for (int i = 0; i < TabUser.size(); i++) {
-                    String[] words = TabUser.get(i).split("#");
-                    comboBoxStatus.addItem(words[4]); //TODO: add status
-                    comboBoxStatus.setBackground(BACKGROUND_BUTTON_COLOR);
-                    comboBoxStatus.setForeground(Color.WHITE);
-                }
-                System.out.println(comboBoxStatus.getItemCount());
-                JButton buttonSaveStatus = createJButton("Save", 205, 100, 100, 30);
-                //actionListenerSaveStatus(buttonSaveStatus, comboBoxStatus, dialog); //TODO: add actionListener
-                dialog.getContentPane().setBackground(BACKGROUND_COLOR);
-                dialog.setSize(400, 300);
-                dialog.setLocationRelativeTo(null);
-                dialog.add(labelStatus);
-                dialog.add(comboBoxStatus);
-                dialog.add(buttonSaveStatus);
-                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                dialog.setVisible(true);
-            });
-    }*/
 
     public void actionListenerStat(JButton buttonStat) {
         buttonStat.addActionListener(e -> {
@@ -407,6 +378,9 @@ public class Interface {
             String[] words = line.split("#");
             labelPseudo.setText(words[1]);
             id = Integer.parseInt(words[0]);
+
+
+
             if(Integer.parseInt(words[3]) == 0){;
                JDialog dialog = new JDialog(frameChat, "Ban", true);
                 dialog.setLayout(null);
@@ -422,7 +396,25 @@ public class Interface {
                 dialog.add(labelUsernameBan);
                 dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 dialog.setVisible(true);
-            };
+            }else if (Integer.parseInt(words[3])==3){
+                //------------button statistics
+                JButton buttonStat = createJButton("",1100,110,40,40);
+                buttonStat.setIcon(new ImageIcon("Images/stats.png"));
+                buttonStat.setContentAreaFilled(false);
+                buttonStat.setBorderPainted(false);
+                buttonStat.setFocusPainted(false);
+                actionListenerStat(buttonStat);
+                panelChat.add(buttonStat);
+                //------------button ban
+                JButton buttonBan = createJButton("", 1100, 70, 40, 40);
+                buttonBan.setIcon(new ImageIcon("Images/ban.png"));
+                buttonBan.setContentAreaFilled(false);
+                buttonBan.setBorderPainted(false);
+                buttonBan.setFocusPainted(false);
+                actionListenerBan(buttonBan, frameChat);
+                panelChat.add(buttonBan);
+            }
+
 
         }} catch (Exception ex) {
             ex.printStackTrace();
@@ -590,41 +582,22 @@ public class Interface {
         // panelChat / bouton
         //------------button send
         JButton buttonSend = createJButton("Send", 1060, 500, 100, 30);
-        JButton buttonDeco = createJButton("", 1100, 30, 40, 40);
-        JButton buttonBan = createJButton("", 1100, 70, 40, 40);
-        JButton buttonStat = createJButton("",1100,110,40,40);
+        JButton buttonLogout = createJButton("", 1100, 30, 40, 40);
         actionListenerSend(buttonSend, textFieldChat, frameChat);
 
-        //------------button deco
-        buttonDeco.setIcon(new ImageIcon("Images/se-deconnecter.png"));
-        buttonDeco.setContentAreaFilled(false);
-        buttonDeco.setBorderPainted(false);
-        buttonDeco.setFocusPainted(false);
-        actionListenerDeco(buttonDeco);
+        //------------button Logout
+        buttonLogout.setIcon(new ImageIcon("Images/se-deconnecter.png"));
+        buttonLogout.setContentAreaFilled(false);
+        buttonLogout.setBorderPainted(false);
+        buttonLogout.setFocusPainted(false);
+        actionListenerLogout(buttonLogout);
 
-        //------------button ban
-        buttonBan.setIcon(new ImageIcon("Images/ban.png"));
-        buttonBan.setContentAreaFilled(false);
-        buttonBan.setBorderPainted(false);
-        buttonBan.setFocusPainted(false);
-        actionListenerBan(buttonBan, frameChat);
-
-        //------------button statistics
-        buttonStat.setIcon(new ImageIcon("Images/stats.png"));
-        buttonStat.setContentAreaFilled(false);
-        buttonStat.setBorderPainted(false);
-        buttonStat.setFocusPainted(false);
-        actionListenerStat(buttonStat);
 
 
         // panelChat / add elements
-        //panelChat.add(buttonStatus);
         panelChat.add(textFieldChat);
         panelChat.add(buttonSend);
-        panelChat.add(buttonDeco);
-        panelChat.add(buttonBan);
-        panelChat.add(buttonStat);
-
+        panelChat.add(buttonLogout);
 
         // add elements to tabbed Pane
         paneChat.add("Chat", panelChat);
