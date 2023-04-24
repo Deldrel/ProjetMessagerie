@@ -295,7 +295,7 @@ public class Interface {
                     System.out.println("Server replied " + line);
                     String[] words = line.split(" ");
                     if (Objects.equals(words[1], "success")) {
-                        UpdateFramChat(frameChat);
+                        UpdateFramChat();
                         frameLogin.dispose();
                         frameChat.setVisible(true);
                     }
@@ -421,7 +421,7 @@ public class Interface {
         }
     }
 
-    public void UpdateFramChat(JFrame frameChat) {
+    public void UpdateFramChat() {
         ClearFramChat();
         try {
             out.println("getCurrentUserInfo");
@@ -689,7 +689,7 @@ public class Interface {
 
     public void createInterface() {
         // Frame
-        timer = new Timer(100, e -> UpdateFramChat(frameChat));
+        timer = new Timer(100, e -> UpdateFramChat());
         timer.start();
         frameLogin();
         frameChat();
