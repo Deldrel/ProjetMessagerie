@@ -29,6 +29,7 @@ public class ControlUser {
     public void setPermission(int permission) {user.setPermission(permission);}
 
     public void setLastConnectionTime(Duration lastConnectionTime) {user.setLastConnectionTime(lastConnectionTime);}
+    public void setStatus(int status) {user.setStatus(status);}
 
 
 }

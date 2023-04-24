@@ -17,22 +17,20 @@ public class UserDAO {
             int n = getNumberOfUsers();
             if (n == -1)
                 return;
-
-            String request = "INSERT INTO user (id, username, first_name, last_name, email, password, permission, last_connection_time) VALUES ('" + n + "', '" + user.getUsername() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getEmail() + "', '" + sha1(user.getPassword()) + "', " + user.getPermission() + ", '" + user.getLastConnectionTime().toString() + "')";
+            String request = "INSERT INTO user (id, username, first_name, last_name, email, password, permission, last_connection_time, status) VALUES (" + n + ", '" + user.getUsername() + "', '" + user.getFirstName() + "', '" + user.getLastName() + "', '" + user.getEmail() + "', '" + sha1(user.getPassword()) + "', " + user.getPermission() + ", '" + user.getLastConnectionTime().toString() + "', " + user.getStatus() + ")";
             Database.queryDDL(request);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static <T> void modifyUserField(int id, String columnLabel, T value) {
+    public static <T> void modifyUserField(String username, String columnLabel, T value) {
         try {
             if (columnLabel.equals("id"))
                 throw new Exception("You can't modify the id of a user");
             if (columnLabel.equals("password"))
                 value = (T) sha1((String) value);
-
-            String request = "UPDATE user SET " + columnLabel + " = '" + value + "' WHERE id = " + id;
+            String request = "UPDATE user SET " + columnLabel + " = '" + value + "' WHERE username = '" + username + "'";
             Database.queryDDL(request);
         } catch (Exception e) {
             System.out.println("\033[31m" + e.getMessage() + "\033[0m");
@@ -60,8 +58,9 @@ public class UserDAO {
                 String password = resultSet.getString("password");
                 int permission = resultSet.getInt("permission");
                 Duration lastConnectionTime = Duration.parse(resultSet.getString("last_connection_time"));
+                int status = resultSet.getInt("status");
 
-                return new User(i, username, firstName, lastName, email, password, permission, lastConnectionTime);
+                return new User(i, username, firstName, lastName, email, password, permission, lastConnectionTime, status);
             } else {
                 return null;
             }
@@ -133,8 +132,9 @@ public class UserDAO {
                 String password = resultSet.getString("password");
                 int permission = resultSet.getInt("permission");
                 Duration lastConnectionTime = Duration.parse(resultSet.getString("last_connection_time"));
+                int status = resultSet.getInt("status");
 
-                users.add(new User(i, username, firstName, lastName, email, password, permission, lastConnectionTime));
+                users.add(new User(i, username, firstName, lastName, email, password, permission, lastConnectionTime, status));
             }
             StringBuilder result = new StringBuilder();
             for (int i = users.size() - 1; i >= 0; i--) {
