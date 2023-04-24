@@ -1,5 +1,9 @@
 import java.sql.Timestamp;
 
+/**
+ * This class represents a message.
+ */
+
 public class Message {
     private int id;
     private int user_id;
@@ -49,6 +53,6 @@ public class Message {
     public String toString() {
         //return "Message [id=" + id + ", userId=" + user_id + ", timestamp=" + timestamp + ", content=" + content + "]";
 
-        return user_id + "#" + UserDAO.get(user_id,"id").getUsername()+"#"+ timestamp + "#" + content;
+        return user_id + "#" + UserDAO.get(user_id, "id").getUsername() + "#" + timestamp + "#" + content;
     }
 }

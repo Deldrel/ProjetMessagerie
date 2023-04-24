@@ -1,5 +1,9 @@
 import java.sql.*;
 
+/**
+ * This class handles the database connection and queries for the log model.
+ */
+
 public class LogDAO {
     private static final Connection connection = Database.getConnection();
 

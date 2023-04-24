@@ -1,5 +1,9 @@
 import java.sql.*;
 
+/**
+ * This class handles the database connection and queries.
+ */
+
 public class Database {
     private static final String host = "localhost";
     private static final String port = "3306";

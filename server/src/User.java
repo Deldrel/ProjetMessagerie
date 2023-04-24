@@ -1,5 +1,9 @@
 import java.time.Duration;
 
+/**
+ * This class represents a user.
+ */
+
 public class User {
     private int id;
     private String username;

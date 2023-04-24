@@ -1,5 +1,10 @@
 import java.time.Duration;
 
+/**
+ * This class is the controller of the user.
+ * It allows to modify the user.
+ */
+
 public class ControlUser {
     private User user;
     private VueUser vue;
