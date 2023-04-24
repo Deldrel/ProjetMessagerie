@@ -1,5 +1,9 @@
 import java.sql.Timestamp;
 
+/**
+ * This class represents a log.
+ */
+
 public class Log {
     private int id;
     private int user_id;

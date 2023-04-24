@@ -1,11 +1,16 @@
-import java.awt.event.ActionListener;
-import java.io.*;
-import java.awt.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
 import javax.swing.*;
 import javax.swing.border.Border;
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
+
+/**
+ * This class is never used
+ */
 
 public class UI {
 
@@ -18,6 +23,7 @@ public class UI {
     private final BufferedReader in;
     private String line;
     private JFrame chatFrame, loginFrame;
+    private JPanel liveChat;
 
     public UI(PrintWriter out, BufferedReader in) {
         this.out = out;
@@ -39,12 +45,12 @@ public class UI {
         final int componentHeight = 10;
         final int Y = (int) (componentHeight + componentHeight / 2.0);
 
-        Pos pseudopos =         new Pos(20, 2 * Y, 25, componentHeight);
-        Pos passwordpos =       new Pos(20, 3 * Y, 25, componentHeight);
-        Pos usernamepos =       new Pos(35, 2 * Y, 30, componentHeight);
-        Pos userpasswordpos =   new Pos(35, 3 * Y, 30, componentHeight);
-        Pos loginpos =          new Pos(35, 4 * Y, 30, componentHeight);
-        Pos newaccountpos =     new Pos(35, 5 * Y, 30, componentHeight);
+        Pos pseudopos = new Pos(20, 2 * Y, 25, componentHeight);
+        Pos passwordpos = new Pos(20, 3 * Y, 25, componentHeight);
+        Pos usernamepos = new Pos(35, 2 * Y, 30, componentHeight);
+        Pos userpasswordpos = new Pos(35, 3 * Y, 30, componentHeight);
+        Pos loginpos = new Pos(35, 4 * Y, 30, componentHeight);
+        Pos newaccountpos = new Pos(35, 5 * Y, 30, componentHeight);
 
         loginFrame = UIutils.createJFrame("Login", WIDTH, HEIGHT);
         JTabbedPane pane = UIutils.createJTabbedPane(WIDTH, HEIGHT);
@@ -86,12 +92,13 @@ public class UI {
     }
 
     public void chatFrame() {
-        Pos chatpos =   new Pos(20, 80, 60, 10);
-        Pos sendpos =   new Pos(80, 80, 10, 10);
+        Pos chatpos = new Pos(20, 80, 60, 10);
+        Pos sendpos = new Pos(80, 80, 10, 10);
 
         chatFrame = UIutils.createJFrame("Chat", WIDTH, HEIGHT);
         JTabbedPane pane = UIutils.createJTabbedPane(WIDTH, HEIGHT);
-        JPanel panel = UIutils.createJPanel();
+        liveChat = UIutils.createJPanel();
+        liveChat.setBackground(UIutils.BACKGROUND_COLOR);
 
         JTextField chat = UIutils.createJTextField(chatpos.x, chatpos.y, chatpos.w, chatpos.h);
 
@@ -105,11 +112,11 @@ public class UI {
         logout.setFocusPainted(false);
         logout.addActionListener(e -> logout());
 
-        panel.add(chat);
-        panel.add(send);
-        panel.add(logout);
+        liveChat.add(chat);
+        liveChat.add(send);
+        liveChat.add(logout);
 
-        pane.add("Chat", panel);
+        pane.add("Chat", liveChat);
 
         chatFrame.add(pane);
         chatFrame.setResizable(false);
@@ -138,17 +145,17 @@ public class UI {
         final int componentHeight = 8;
         final int Y = (int) (componentHeight + componentHeight / 2.0);
 
-        Pos labelfirstnamepos =     new Pos(20, 2 * Y, 25, componentHeight);
-        Pos labellastnamepos =      new Pos(20, 3 * Y, 25, componentHeight);
-        Pos labelemailpos =         new Pos(20, 4 * Y, 25, componentHeight);
-        Pos labelusernamepos =      new Pos(20, 5 * Y, 25, componentHeight);
-        Pos labelpasswordpos =      new Pos(20, 6 * Y, 25, componentHeight);
+        Pos labelfirstnamepos = new Pos(20, 2 * Y, 25, componentHeight);
+        Pos labellastnamepos = new Pos(20, 3 * Y, 25, componentHeight);
+        Pos labelemailpos = new Pos(20, 4 * Y, 25, componentHeight);
+        Pos labelusernamepos = new Pos(20, 5 * Y, 25, componentHeight);
+        Pos labelpasswordpos = new Pos(20, 6 * Y, 25, componentHeight);
         Pos textfieldfirstnamepos = new Pos(35, 2 * Y, 30, componentHeight);
-        Pos textfieldlastnamepos =  new Pos(35, 3 * Y, 30, componentHeight);
-        Pos textfieldemailpos =     new Pos(35, 4 * Y, 30, componentHeight);
-        Pos textfieldusernamepos =  new Pos(35, 5 * Y, 30, componentHeight);
-        Pos textfieldpasswordpos =  new Pos(35, 6 * Y, 30, componentHeight);
-        Pos buttoncreatepos =       new Pos(35, 7 * Y, 30, componentHeight);
+        Pos textfieldlastnamepos = new Pos(35, 3 * Y, 30, componentHeight);
+        Pos textfieldemailpos = new Pos(35, 4 * Y, 30, componentHeight);
+        Pos textfieldusernamepos = new Pos(35, 5 * Y, 30, componentHeight);
+        Pos textfieldpasswordpos = new Pos(35, 6 * Y, 30, componentHeight);
+        Pos buttoncreatepos = new Pos(35, 7 * Y, 30, componentHeight);
 
         JDialog dialog = new JDialog(frame, "New Account", true);
         dialog.setLayout(null);
@@ -239,40 +246,43 @@ public class UI {
     }
 
     public void updateChat() {
-        /*
-        ClearFramChat();
-        out.println("getCurrentUserInfo");
-        out.flush();
+        ArrayList<String> messages = new ArrayList<>();
+
         try {
+            out.println("getCurrentUserInfo");
+            out.flush();
             line = in.readLine();
-            String[] words = line.split(" ");
-            labelPseudo.setText(words[0]);
-            id = Integer.parseInt(words[1]);
-            System.out.println(id);
+            if (line != null && !line.endsWith("error")) {
+                String[] userInfos = line.split(" ");
+                int id = Integer.parseInt(userInfos[1]);
+            }
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        panelChat.add(labelPseudo);
-
-
-        try {
-            // id#userId#username"time(date heure) content |
             out.println("getMessages " + MAXMESSAGE);
             out.flush();
             line = in.readLine();
-            String[] words = line.split("&");
-            Collections.addAll(TabMessage, words);
+            if (line != null && !line.endsWith("error")) {
+                String[] messagesInfos = line.split("&");
+                Collections.addAll(messages, messagesInfos);
+
+                for (int i = messages.size() - 1; i >= 0; i--) {
+                    String[] words = messages.get(i).split("#");
+                    final int componentHeight = 4;
+                    final int Y = (int) (componentHeight + componentHeight / 2.0);
+                    Pos pos = new Pos(20, i * Y, 60, componentHeight);
+                    JLabel label = UIutils.createJLabel(words[3], pos.x, pos.y, pos.w, pos.h);
+                    label.setHorizontalTextPosition(JLabel.LEFT);
+                    liveChat.add(label);
+                }
+            }
+
+            liveChat.repaint();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        afficherMessage();
-        panelChat.repaint();
-
-         */
     }
 
-    class Pos {
+    static class Pos {
         public int x, y, w, h;
 
         public Pos(int x, int y, int width, int height) {
@@ -280,6 +290,22 @@ public class UI {
             this.y = (int) (y * HEIGHT / 100.0);
             this.w = (int) (width * WIDTH / 100.0);
             this.h = (int) (height * HEIGHT / 100.0);
+        }
+
+        public void setX(int x) {
+            this.x = (int) (x * WIDTH / 100.0);
+        }
+
+        public void setY(int y) {
+            this.y = (int) (y * HEIGHT / 100.0);
+        }
+
+        public void setW(int w) {
+            this.w = (int) (w * WIDTH / 100.0);
+        }
+
+        public void setH(int h) {
+            this.h = (int) (h * HEIGHT / 100.0);
         }
     }
 }

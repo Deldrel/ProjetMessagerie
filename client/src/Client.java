@@ -5,6 +5,12 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
+/**
+ * This class is the client side of the application.
+ * It creates a socket and connects to the server.
+ * It also creates a UI object to display the interface.
+ * It also creates a thread to listen to the server and display the messages.
+ */
 public class Client {
     public static void main(String[] args) {
         try (Socket socket = new Socket("localhost", 1234)) {

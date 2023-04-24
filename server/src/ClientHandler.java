@@ -5,6 +5,11 @@ import java.net.*;
 import java.sql.Timestamp;
 import java.time.Duration;
 
+/**
+ * This class handles the client requests and sends the appropriate response.
+ * It implements the Runnable interface.
+ */
+
 public class ClientHandler implements Runnable {
     private final Socket clientSocket;
     private PrintWriter out = null;
@@ -39,6 +44,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * This method handles the commands and communicates with the client.
+     * @throws Exception
+     */
     public void commandHandler() throws Exception {
         String line;
         while ((line = in.readLine()) != null) {
@@ -173,6 +182,13 @@ public class ClientHandler implements Runnable {
         }
     }
 
+
+    /**
+     * This method is used to login and verify hashed password.
+     * @param username
+     * @param password
+     * @return String
+     */
     public String login(String username, String password) {
         try {
             User auth = UserDAO.get(username, "username");

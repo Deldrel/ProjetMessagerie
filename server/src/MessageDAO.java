@@ -4,6 +4,10 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+/**
+ * This class handles the database connection and queries for the message model.
+ */
+
 public class MessageDAO {
     private static final Connection connection = Database.getConnection();
 

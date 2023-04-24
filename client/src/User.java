@@ -1,5 +1,10 @@
 import java.time.Duration;
 
+/**
+ * This class is the model of the user.
+ * It allows to create a user and to modify it.
+ */
+
 public class User {
     private String password;
     private int id;

@@ -1,10 +1,17 @@
-// https://www.geeksforgeeks.org/multithreaded-servers-in-java/
-
 import java.io.*;
 import java.net.*;
 import java.time.Duration;
 import java.util.Scanner;
 import java.sql.*;
+
+//javadoc comment
+/**
+ * Server class
+ * <p>
+ * This class is the main class of the server.
+ * It creates a server socket and waits for new connections.
+ * It also handles the commands from the console.
+*/
 
 public class Server {
     private static ServerSocket server = null;
@@ -55,6 +62,10 @@ public class Server {
         }
     }
 
+    /**
+     * This method is called when a new connection is established.
+     * @throws IOException
+     */
     public static void newConnectionHandler() throws IOException {
         while (true) {
             Socket client = server.accept();

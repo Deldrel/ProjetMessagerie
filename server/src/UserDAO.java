@@ -4,6 +4,11 @@ import java.sql.*;
 import java.time.Duration;
 import java.util.ArrayList;
 
+//javadoc comments
+/**
+ * This class handles the database connection and queries for the user model.
+ */
+
 public class UserDAO {
     private static final Connection connection = Database.getConnection();
 
@@ -150,6 +155,12 @@ public class UserDAO {
         }
     }
 
+    /**
+     *
+     * @param input
+     * @return String
+     * @throws NoSuchAlgorithmException
+     */
     public static String sha1(String input) throws NoSuchAlgorithmException {
         MessageDigest mDigest = MessageDigest.getInstance("SHA1");
         byte[] result = mDigest.digest(input.getBytes());
