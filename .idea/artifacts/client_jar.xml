@@ -1,8 +1,12 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="client:jar">
+  <artifact name="client:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/client_jar</output-path>
-    <root id="archive" name="client.jar">
-      <element id="module-output" name="client" />
+    <root id="root">
+      <element id="archive" name="client.jar">
+        <element id="module-output" name="client" />
+      </element>
+      <element id="file-copy" path="$PROJECT_DIR$/modules/mysql-connector-java-5.1.49.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/modules/jfreechart-1.5.3.jar" />
     </root>
   </artifact>
 </component>

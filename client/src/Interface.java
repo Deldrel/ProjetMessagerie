@@ -1,3 +1,8 @@
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -12,6 +17,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
+import static org.jfree.chart.ChartFactory.createPieChart;
 
 
 public class Interface {
@@ -193,7 +199,6 @@ public class Interface {
             newUser.setEmail(textFieldEmailNewAccount.getText());
             newUser.setUsername(textFieldUsernameNewAccount.getText());
             newUser.setPassword(textFieldPasswordNewAccount.getText());
-            newUser.setStatus(0);
             VueUser vueUser = new VueUser();
             ControlUser controlUser = new ControlUser(newUser, vueUser);
             out.println(vueUser.newAccountToString(newUser));
@@ -347,6 +352,39 @@ public class Interface {
             });
     }*/
 
+    public void actionListenerStat(JButton buttonStat) {
+        buttonStat.addActionListener(e -> {
+            //JFrame frameStat = createJFrame("Stat",800,600);
+            //frameStat.setLayout(null);
+
+            int online = 10;
+            int offline = 10;
+            int away = 10;
+            int user = 10;
+            int moderator = 10;
+            int administrator = 10;
+            int banns = 10;
+
+            DefaultPieDataset pieDataset = new DefaultPieDataset();
+            pieDataset.setValue("Online", online);
+            pieDataset.setValue("Offline", offline);
+            pieDataset.setValue("Away", away);
+            pieDataset.setValue("User", user);
+            pieDataset.setValue("Moderator", moderator);
+            pieDataset.setValue("Administrator", administrator);
+            pieDataset.setValue("Banns", banns);
+
+            JFreeChart pieChart = createPieChart("Nombre d'utilisateurs", pieDataset, true, false, false);
+            ChartFrame cPanel = new ChartFrame("Stat",pieChart);
+
+            cPanel.getContentPane().setBackground(BACKGROUND_COLOR);
+            cPanel.setSize(800, 600);
+            cPanel.setLocationRelativeTo(null);
+            cPanel.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            cPanel.setVisible(true);
+        });
+    }
+
     public void ClearFramChat() {
         panelChat.remove(labelPseudo);
         TabMessage.clear();
@@ -373,7 +411,9 @@ public class Interface {
                JDialog dialog = new JDialog(frameChat, "Ban", true);
                 dialog.setLayout(null);
                 JLabel labelUsernameBan = createJLabel("You have been banned", 250, 275, 1150, 60);
+                //changer la taille du texte
                 labelUsernameBan.setFont(new Font("Dialog", Font.BOLD, 50));
+                //changer la couleur du texte
                 labelUsernameBan.setForeground(Color.RED);
                 System.out.println("You have been banned");
                 dialog.getContentPane().setBackground(BACKGROUND_COLOR);
@@ -552,9 +592,8 @@ public class Interface {
         JButton buttonSend = createJButton("Send", 1060, 500, 100, 30);
         JButton buttonDeco = createJButton("", 1100, 30, 40, 40);
         JButton buttonBan = createJButton("", 1100, 70, 40, 40);
-       // JButton buttonStatus = createJButton("Status", 30, 60, 70, 25);
+        JButton buttonStat = createJButton("",1100,110,40,40);
         actionListenerSend(buttonSend, textFieldChat, frameChat);
-        //actionListenerStatus(buttonStatus, frameChat);
 
         //------------button deco
         buttonDeco.setIcon(new ImageIcon("Images/se-deconnecter.png"));
@@ -570,6 +609,13 @@ public class Interface {
         buttonBan.setFocusPainted(false);
         actionListenerBan(buttonBan, frameChat);
 
+        //------------button statistics
+        buttonStat.setIcon(new ImageIcon("Images/stats.png"));
+        buttonStat.setContentAreaFilled(false);
+        buttonStat.setBorderPainted(false);
+        buttonStat.setFocusPainted(false);
+        actionListenerStat(buttonStat);
+
 
         // panelChat / add elements
         //panelChat.add(buttonStatus);
@@ -577,6 +623,7 @@ public class Interface {
         panelChat.add(buttonSend);
         panelChat.add(buttonDeco);
         panelChat.add(buttonBan);
+        panelChat.add(buttonStat);
 
 
         // add elements to tabbed Pane
