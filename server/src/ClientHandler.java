@@ -126,6 +126,22 @@ public class ClientHandler implements Runnable {
                     out.println("newAccount success");
                     out.flush();
                 }
+                case "changeStatus" ->{
+                    if (words.length != 3) {
+                        out.println("argument error");
+                        out.flush();
+                        break;
+                    }
+                    if (loggedin) {
+                        UserDAO.modifyUserField(words[1],"status",words[2]);
+                        out.println("changeStatus success");
+                        out.flush();
+                    } else {
+                        out.println("changeStatus error");
+                        out.flush();
+                    }
+
+                }
                 case "getUserInfo" -> {
                     if (words.length != 2) {
                         out.println("argument error");

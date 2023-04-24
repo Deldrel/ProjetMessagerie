@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
+
 import static org.jfree.chart.ChartFactory.createPieChart;
 
 
@@ -46,6 +47,8 @@ public class Interface {
 
     int id = 0;
 
+    int away = 0;
+
     String line;
     ArrayList<JLabel> Message = new ArrayList<>();
 
@@ -54,6 +57,16 @@ public class Interface {
     ArrayList<JLabel> User = new ArrayList<>();
 
     ArrayList<String> TabUser = new ArrayList<>();
+
+    ArrayList<JButton> TabSatus = new ArrayList<>();
+
+    public ImageIcon ImageOnline = new ImageIcon("Images/online1.png");
+    public ImageIcon ImageOffline = new ImageIcon("Images/offline1.png");
+    public ImageIcon ImageAway = new ImageIcon("Images/away1.png");
+    public ImageIcon ImageGhost = new ImageIcon("Images/ghost.png");
+    public ImageIcon ImageGhost2 = new ImageIcon("Images/ghost2.png");
+    public ImageIcon ImageLogout = new ImageIcon("Images/se-deconnecter.png");
+
 
     JLabel labelPseudo = createJLabel("Username : ", 30, 30, 200, 30);
 
@@ -306,18 +319,32 @@ public class Interface {
             JLabel newJlabel = createJLabel("", 800, 500, 200, 30);
             User.add(newJlabel);
         }
+        for (int i = 0; i < MAXUERS; i++) {
+            JButton newButton = createJButton("", 1100, 30, 40, 40);
+            newButton.setContentAreaFilled(false);
+            newButton.setBorderPainted(false);
+            newButton.setFocusPainted(false);
+            TabSatus.add(newButton);
+        }
     }
 
     public void actionListenerLogout(JButton buttonLogout) {
         buttonLogout.addActionListener(e -> {
-            out.println("logout");
-            out.flush();
             try {
+                if (away==0){
+                    out.println("changeStatus " + labelPseudo.getText() + " 0");
+                    out.flush();
+                    line = in.readLine();
+                    System.out.println("Server replied " + line);
+                }
+                out.println("logout");
+                out.flush();
                 line = in.readLine();
+                System.out.println("Server replied " + line);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            System.out.println("Server replied " + line);
+
             frameChat.dispose();
             frameLogin.setVisible(true);
         });
@@ -346,13 +373,36 @@ public class Interface {
             pieDataset.setValue("Banns", banns);
 
             JFreeChart pieChart = createPieChart("Nombre d'utilisateurs", pieDataset, true, false, false);
-            ChartFrame cPanel = new ChartFrame("Stat",pieChart);
+            ChartFrame cPanel = new ChartFrame("Stat", pieChart);
 
             cPanel.getContentPane().setBackground(BACKGROUND_COLOR);
             cPanel.setSize(800, 600);
             cPanel.setLocationRelativeTo(null);
             cPanel.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             cPanel.setVisible(true);
+        });
+    }
+
+    public void actionListerAway(JButton buttonAway) {
+        buttonAway.addActionListener(e -> {
+            try {
+                if (away == 0) {
+                    out.println("changeStatus " + labelPseudo.getText() + " 2");
+                    out.flush();
+                    line = in.readLine();
+                    System.out.println("Server replied " + line);
+                    away=1;
+                } else if (away == 1) {
+                    out.println("changeStatus " + labelPseudo.getText() + " 1");
+                    out.flush();
+                    line = in.readLine();
+                    System.out.println("Server replied " + line);
+                    away=0;
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
     }
 
@@ -366,6 +416,9 @@ public class Interface {
         for (int i = 0; i < User.size(); i++) {
             panelChat.remove(User.get(i));
         }
+        for (int i = 0; i < TabSatus.size(); i++) {
+            panelChat.remove(TabSatus.get(i));
+        }
     }
 
     public void UpdateFramChat(JFrame frameChat) {
@@ -374,49 +427,57 @@ public class Interface {
             out.println("getCurrentUserInfo");
             out.flush();
             line = in.readLine();
-            if (line != null && !line.endsWith("error")){
-            String[] words = line.split("#");
-            labelPseudo.setText(words[1]);
-            id = Integer.parseInt(words[0]);
+            if (line != null && !line.endsWith("error")) {
+                String[] words = line.split("#");
+                labelPseudo.setText(words[1]);
+                id = Integer.parseInt(words[0]);
 
 
-
-            if(Integer.parseInt(words[3]) == 0){;
-               JDialog dialog = new JDialog(frameChat, "Ban", true);
-                dialog.setLayout(null);
-                JLabel labelUsernameBan = createJLabel("You have been banned", 250, 275, 1150, 60);
-                //changer la taille du texte
-                labelUsernameBan.setFont(new Font("Dialog", Font.BOLD, 50));
-                //changer la couleur du texte
-                labelUsernameBan.setForeground(Color.RED);
-                System.out.println("You have been banned");
-                dialog.getContentPane().setBackground(BACKGROUND_COLOR);
-                dialog.setSize(1200, 650);
-                dialog.setLocationRelativeTo(null);
-                dialog.add(labelUsernameBan);
-                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                dialog.setVisible(true);
-            }else if (Integer.parseInt(words[3])==3){
-                //------------button statistics
-                JButton buttonStat = createJButton("",1100,110,40,40);
-                buttonStat.setIcon(new ImageIcon("Images/stats.png"));
-                buttonStat.setContentAreaFilled(false);
-                buttonStat.setBorderPainted(false);
-                buttonStat.setFocusPainted(false);
-                actionListenerStat(buttonStat);
-                panelChat.add(buttonStat);
-                //------------button ban
-                JButton buttonBan = createJButton("", 1100, 70, 40, 40);
-                buttonBan.setIcon(new ImageIcon("Images/ban.png"));
-                buttonBan.setContentAreaFilled(false);
-                buttonBan.setBorderPainted(false);
-                buttonBan.setFocusPainted(false);
-                actionListenerBan(buttonBan, frameChat);
-                panelChat.add(buttonBan);
+                if (Integer.parseInt(words[3]) == 0) {
+                    ;
+                    JDialog dialog = new JDialog(frameChat, "Ban", true);
+                    dialog.setLayout(null);
+                    JLabel labelUsernameBan = createJLabel("You have been banned", 250, 275, 1150, 60);
+                    //changer la taille du texte
+                    labelUsernameBan.setFont(new Font("Dialog", Font.BOLD, 50));
+                    //changer la couleur du texte
+                    labelUsernameBan.setForeground(Color.RED);
+                    System.out.println("You have been banned");
+                    dialog.getContentPane().setBackground(BACKGROUND_COLOR);
+                    dialog.setSize(1200, 650);
+                    dialog.setLocationRelativeTo(null);
+                    dialog.add(labelUsernameBan);
+                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                    dialog.setVisible(true);
+                } else if (Integer.parseInt(words[3]) == 3) {
+                    //------------button statistics
+                    JButton buttonStat = createJButton("", 1100, 110, 40, 40);
+                    buttonStat.setIcon(new ImageIcon("Images/stats.png"));
+                    buttonStat.setContentAreaFilled(false);
+                    buttonStat.setBorderPainted(false);
+                    buttonStat.setFocusPainted(false);
+                    actionListenerStat(buttonStat);
+                    panelChat.add(buttonStat);
+                    //------------button ban
+                    JButton buttonBan = createJButton("", 1100, 70, 40, 40);
+                    buttonBan.setIcon(new ImageIcon("Images/ban.png"));
+                    buttonBan.setContentAreaFilled(false);
+                    buttonBan.setBorderPainted(false);
+                    buttonBan.setFocusPainted(false);
+                    actionListenerBan(buttonBan, frameChat);
+                    panelChat.add(buttonBan);
+                }
+                if (Integer.parseInt(words[4])==0){
+                    out.println("changeStatus " + labelPseudo.getText() + " 1");
+                    out.flush();
+                    line = in.readLine();
+                    System.out.println("Server replied " + line);
+                }
+                if (Integer.parseInt(words[4])==2){
+                    away=1;
+                }
             }
-
-
-        }} catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         panelChat.add(labelPseudo);
@@ -450,14 +511,15 @@ public class Interface {
         panelChat.repaint();
     }
 
-    public void afficherUser(){
-        for (int i = 0; i < TabUser.size() ; i++) {
+    public void afficherUser() {
+        for (int i = 0; i < TabUser.size(); i++) {
             String[] words = TabUser.get(i).split("#");
-            if( words.length < 2){
+            if (words.length < 2) {
                 continue;
             }
             User.get(i).setText(words[1]);
             User.get(i).setBounds(100, 350 - (i * 50), 200, 50);
+            /*
             if (user.getStatus() == 0){
                 JLabel labelStatusOffline = createJLabel("", 70, 350 - (i * 50), 20, 20);
                 labelStatusOffline.setIcon(new ImageIcon("Images/red_circle.png"));
@@ -467,7 +529,16 @@ public class Interface {
             } else if (user.getStatus() == 2) {
                 JLabel labelStatusAway = createJLabel("", 70, 350 - (i * 50), 10, 10);
                 labelStatusAway.setIcon(new ImageIcon("Images/dark_blue_circle.png"));
+            }*/
+            if (Integer.parseInt(words[4]) == 0) {
+                TabSatus.get(i).setIcon(ImageOffline);
+            } else if (Integer.parseInt(words[4]) == 1) {
+                TabSatus.get(i).setIcon(ImageOnline);
+            } else if (Integer.parseInt(words[4]) == 2) {
+                TabSatus.get(i).setIcon(ImageGhost2);
             }
+            TabSatus.get(i).setBounds(30, 350 - (i * 50), 40, 50);
+            panelChat.add(TabSatus.get(i));
             panelChat.add(User.get(i));
         }
     }
@@ -586,7 +657,7 @@ public class Interface {
         actionListenerSend(buttonSend, textFieldChat, frameChat);
 
         //------------button Logout
-        buttonLogout.setIcon(new ImageIcon("Images/se-deconnecter.png"));
+        buttonLogout.setIcon(ImageLogout);
         buttonLogout.setContentAreaFilled(false);
         buttonLogout.setBorderPainted(false);
         buttonLogout.setFocusPainted(false);
@@ -594,10 +665,19 @@ public class Interface {
 
 
 
+        JButton buttonAway = createJButton("", 30, 60, 30, 30);
+        buttonAway.setIcon(ImageGhost2);
+        buttonAway.setContentAreaFilled(false);
+        buttonAway.setBorderPainted(false);
+        buttonAway.setFocusPainted(false);
+        actionListerAway(buttonAway);
+
+
         // panelChat / add elements
         panelChat.add(textFieldChat);
         panelChat.add(buttonSend);
         panelChat.add(buttonLogout);
+        panelChat.add(buttonAway);
 
         // add elements to tabbed Pane
         paneChat.add("Chat", panelChat);
