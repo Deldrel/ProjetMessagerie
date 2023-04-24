@@ -1,3 +1,4 @@
+import org.jfree.chart.ChartFrame;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
@@ -353,8 +354,8 @@ public class Interface {
 
     public void actionListenerStat(JButton buttonStat) {
         buttonStat.addActionListener(e -> {
-            JDialog dialog = new JDialog(frameChat,"Statistics",true);
-            dialog.setLayout(null);
+            //JFrame frameStat = createJFrame("Stat",800,600);
+            //frameStat.setLayout(null);
 
             int online = 10;
             int offline = 10;
@@ -373,15 +374,14 @@ public class Interface {
             pieDataset.setValue("Administrator", administrator);
             pieDataset.setValue("Banns", banns);
 
-
             JFreeChart pieChart = createPieChart("Nombre d'utilisateurs", pieDataset, true, false, false);
-            ChartPanel cPanel = new ChartPanel(pieChart);
-            dialog.add(cPanel);
-            dialog.getContentPane().setBackground(BACKGROUND_COLOR);
-            dialog.setSize(800, 600);
-            dialog.setLocationRelativeTo(null);
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            dialog.setVisible(true);
+            ChartFrame cPanel = new ChartFrame("Stat",pieChart);
+
+            cPanel.getContentPane().setBackground(BACKGROUND_COLOR);
+            cPanel.setSize(800, 600);
+            cPanel.setLocationRelativeTo(null);
+            cPanel.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            cPanel.setVisible(true);
         });
     }
 
